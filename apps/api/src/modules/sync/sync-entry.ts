@@ -19,4 +19,9 @@ export interface SyncEntry {
   pullRoles: Role[];
   /** Optional: hide fields from some roles on pull (e.g. purchase cost from the cashier). */
   project?: (row: WireRow, user: AuthUser) => WireRow;
+  /**
+   * Optional: rules that depend on the server's current copy, e.g. "only the admin may
+   * cancel a receipt". Return a reason to refuse, or null to allow.
+   */
+  authorize?: (incoming: WireRow, user: AuthUser, existing: WireRow | undefined) => string | null;
 }

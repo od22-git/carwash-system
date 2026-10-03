@@ -9,6 +9,8 @@ export const SYNCED_TABLES = [
   'services',
   'servicePrices',
   'workers',
+  'tickets',
+  'auditEvents',
 ] as const;
 
 export type SyncedTable = (typeof SYNCED_TABLES)[number];

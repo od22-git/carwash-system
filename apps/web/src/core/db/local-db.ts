@@ -1,9 +1,11 @@
 import type {
+  AuditEventRecord,
   CustomerRecord,
   ServicePriceRecord,
   ServiceRecord,
   SettingRecord,
   SyncRecord,
+  TicketRecord,
   VehicleRecord,
   WorkerPublic,
 } from '@carwash/shared';
@@ -49,6 +51,9 @@ export class LocalDb extends Dexie {
   servicePrices!: EntityTable<ServicePriceRecord, 'id'>;
   /** The cashier's laptop does not receive pay fields. */
   workers!: EntityTable<WorkerPublic, 'id'>;
+  tickets!: EntityTable<TicketRecord, 'id'>;
+  /** Pulled only on the admin's laptop. */
+  auditEvents!: EntityTable<AuditEventRecord, 'id'>;
 
   constructor(name = 'carwash') {
     super(name);
@@ -64,6 +69,10 @@ export class LocalDb extends Dexie {
       services: 'id',
       servicePrices: 'id, serviceId',
       workers: 'id',
+    });
+    this.version(3).stores({
+      tickets: 'id, status, arrivedAt, customerId, workerId',
+      auditEvents: 'id, createdAt',
     });
   }
 }

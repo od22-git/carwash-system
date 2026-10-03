@@ -1,8 +1,10 @@
 import {
+  auditEventRecordSchema,
   customerRecordSchema,
   servicePriceRecordSchema,
   serviceRecordSchema,
   settingRecordSchema,
+  ticketRecordSchema,
   vehicleRecordSchema,
   workerRecordSchema,
 } from '@carwash/shared';
@@ -17,4 +19,6 @@ export const RECORD_SCHEMAS: Record<SyncedTable, ZodType> = {
   services: serviceRecordSchema,
   servicePrices: servicePriceRecordSchema,
   workers: workerRecordSchema,
+  tickets: ticketRecordSchema,
+  auditEvents: auditEventRecordSchema,
 };

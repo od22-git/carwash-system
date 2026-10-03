@@ -46,3 +46,29 @@
     }
   }
 }
+
+/*
+ * Printing: only the print area (a receipt) goes to the thermal printer, never the screen.
+ * 80 mm is the common receipt roll width.
+ */
+.print-area {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: 80mm auto;
+    margin: 3mm;
+  }
+
+  #root > :not(.print-area) {
+    display: none !important;
+  }
+
+  .print-area {
+    display: block;
+    width: 74mm;
+    color: #000;
+    background: #fff;
+  }
+}

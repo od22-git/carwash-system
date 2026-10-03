@@ -48,6 +48,11 @@ export class SyncService {
     if (!entry.pushRoles.includes(user.role)) return 'not_allowed';
     const parsed = entry.schema.safeParse(op.row);
     if (!parsed.success) return 'invalid';
+    if (entry.authorize) {
+      const existing = await this.repo.findById(entry, String(parsed.data.id));
+      const reason = entry.authorize(parsed.data, user, existing);
+      if (reason) return reason;
+    }
     await this.repo.upsert(entry, parsed.data);
     return null;
   }

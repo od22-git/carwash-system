@@ -45,4 +45,9 @@ export class SyncRepository {
     const rows = await this.db.select().from(entry.table).where(inArray(entry.table.id, ids));
     return rows as WireRow[];
   }
+
+  async findById(entry: SyncEntry, id: string): Promise<WireRow | undefined> {
+    const [row] = await this.loadRows(entry, [id]);
+    return row;
+  }
 }
