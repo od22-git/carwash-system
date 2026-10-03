@@ -2,7 +2,7 @@ import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { createTestApp } from '../../test-utils/create-test-app';
 
-describe('GET /api/health', () => {
+describe('GET /api/health (no login needed)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {

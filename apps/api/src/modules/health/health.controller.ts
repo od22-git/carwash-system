@@ -1,7 +1,9 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { sql } from 'drizzle-orm';
+import { Public } from '../../common';
 import { DB, type Database } from '../../database';
 
+@Public()
 @Controller('health')
 export class HealthController {
   constructor(@Inject(DB) private readonly db: Database) {}
