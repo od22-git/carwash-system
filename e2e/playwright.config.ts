@@ -11,6 +11,8 @@ export default defineConfig({
   testDir: './tests',
   globalSetup: './global-setup.ts',
   workers: 1,
+  // On GitHub, failures also show up as annotations on the run.
+  reporter: process.env.CI ? [['github'], ['list']] : [['list']],
   timeout: 60_000,
   expect: { timeout: 10_000 },
   use: { baseURL: 'http://localhost:4173', locale: 'ar' },
