@@ -37,7 +37,8 @@ src/
   subscriptions/ packages, subscriptions sold per car, free-wash use
   tickets/       ticket-status (allowed status changes), ticket-totals
   workers/       pay-type, worker-pay
-  stock/         product-kind, stock-ledger, units, daily-waste
+  stock/         product, movement and sale records; ledger (levels, average cost), counts
+                 (evening waste), period summaries, sale lines (piece / carton prices)
   customers/     syrian-phone, arabic-name, duplicates, plate
   whatsapp/      template, link
   audit/         audit events (cancellations)
@@ -94,13 +95,18 @@ src/
 
 A feature may import from `shared/`, `core/` and `@carwash/shared`, and from another
 feature only through that feature's `index.ts`. Feature imports go one way:
-`settings, customers, catalog, workers` ← `garage` ← `wash`.
+`settings, customers, catalog, workers` ← `garage` ← `wash`, and `stock` ← `sales`.
 
 Reused building blocks:
 
 - `customers`: `CarPicker` (plate → known car, or a new car and customer) and `CarHeader`.
 - `shared/ui`: `RegisterPanel` (the framed form above a board), `Receipt` / `ReceiptRow`
-  (80 mm print layout), `CancelReceiptForm` (admin cancel with optional reason), `Table`.
+  (80 mm print layout; the plate is optional), `CancelReceiptForm` (admin cancel with optional
+  reason), `Table`, `ChoiceGroup` (one-tap choice), `SelectField`, `Notice` (info / success /
+  warning / error).
+- `shared/lib`: `UserError` (a message shown to the user as it is), `date-input` (day and month
+  pickers, `dayRange` / `monthRange` for reports), `parseWholeNumber`.
+- `stock`: `StockContext` shared by the stock and waste screens; `useLowStockCount` for the menu.
 - `core/db`: `nextReceiptNo()` — one receipt series per laptop for wash, garage and packages.
 - `core/audit`: `logAudit()` for sensitive actions.
 

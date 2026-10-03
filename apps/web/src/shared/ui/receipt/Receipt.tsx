@@ -9,7 +9,8 @@ interface ReceiptProps {
   /** Shown as date + time, e.g. the car's entry. */
   at: number;
   atLabel: string;
-  plate: string;
+  /** The car's plate, printed large. Counter sales have none. */
+  plate?: string;
   cancelled: boolean;
   /** The receipt's own rows: customer, services, fees. */
   children: ReactNode;
@@ -26,9 +27,11 @@ export function Receipt(props: ReceiptProps) {
         <ReceiptRow label="التاريخ" value={formatDate(props.at)} />
         <ReceiptRow label={props.atLabel} value={formatTime(props.at)} />
       </div>
-      <p className="text-center text-[16pt] font-bold" dir="ltr">
-        {props.plate}
-      </p>
+      {props.plate && (
+        <p className="text-center text-[16pt] font-bold" dir="ltr">
+          {props.plate}
+        </p>
+      )}
       {props.children}
       <div className="border-t border-black pt-1.5">
         <ReceiptRow label="المجموع" value={props.total} strong />

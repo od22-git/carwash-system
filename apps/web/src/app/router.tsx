@@ -5,7 +5,9 @@ import { LoginPage, SetupPage } from '../features/auth';
 import { ServicesPage } from '../features/catalog';
 import { CustomersPage } from '../features/customers';
 import { GaragePage, PackagesPage } from '../features/garage';
+import { SalesPage } from '../features/sales';
 import { SettingsPage } from '../features/settings';
+import { StockPage, WastePage } from '../features/stock';
 import { WashPage } from '../features/wash';
 import { WorkersPage } from '../features/workers';
 import { AppShell } from './layout/AppShell';
@@ -16,6 +18,9 @@ import { PlaceholderPage } from './PlaceholderPage';
 const PAGES: Record<string, ReactNode> = {
   '/wash': <WashPage />,
   '/garage': <GaragePage />,
+  '/sales': <SalesPage />,
+  '/stock': <StockPage />,
+  '/waste': <WastePage />,
   '/packages': <PackagesPage />,
   '/customers': <CustomersPage />,
   '/workers': <WorkersPage />,

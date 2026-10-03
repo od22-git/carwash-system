@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react';
 
-type Tone = 'info' | 'success' | 'error';
+type Tone = 'info' | 'success' | 'warning' | 'error';
 
 const TONES: Record<Tone, string> = {
   info: 'border-line bg-ground text-ink',
   success: 'border-status-done/40 bg-status-done/10 text-status-done',
+  warning: 'border-status-washing/40 bg-status-washing/10 text-status-washing',
   error: 'border-status-grace/40 bg-status-grace/10 text-status-grace',
 };
 

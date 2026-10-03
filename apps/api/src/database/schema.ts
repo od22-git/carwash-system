@@ -8,6 +8,7 @@ export * from '../modules/customers/customers.schema';
 export * from '../modules/devices/devices.schema';
 export * from '../modules/garage/garage.schema';
 export * from '../modules/settings/settings.schema';
+export * from '../modules/stock/stock.schema';
 export * from '../modules/subscriptions/subscriptions.schema';
 export * from '../modules/sync/change-log.schema';
 export * from '../modules/tickets/tickets.schema';

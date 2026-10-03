@@ -1,9 +1,11 @@
 import { ApiError, OfflineError } from '../../core/api';
 import { OfflineLoginError } from '../../core/auth';
 import { InvalidRecordError } from '../../core/sync';
+import { UserError } from './user-error';
 
 /** Turns any error into one sentence the cashier can act on. */
 export function errorMessage(error: unknown): string {
+  if (error instanceof UserError) return error.message;
   if (error instanceof InvalidRecordError) {
     return 'بعض المعلومات غير صحيحة أو ناقصة، راجعها ثم احفظ مرة أخرى.';
   }

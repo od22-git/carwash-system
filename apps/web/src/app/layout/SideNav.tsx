@@ -1,6 +1,7 @@
 import type { Role } from '@carwash/shared';
 import { NavLink } from 'react-router';
 import { isAdminOnly, navFor, type NavItem } from '../navigation';
+import { StockAlert } from './StockAlert';
 
 function NavEntry({ item }: { item: NavItem }) {
   return (
@@ -13,6 +14,7 @@ function NavEntry({ item }: { item: NavItem }) {
       }
     >
       {item.label}
+      {item.stockAlert && <StockAlert kinds={item.stockAlert} />}
     </NavLink>
   );
 }
