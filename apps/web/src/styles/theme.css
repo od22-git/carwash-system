@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens. Wet-asphalt navy ink on a cool ground, foam teal for actions,
+ * plate yellow reserved for licence-plate chips only, one colour per wash status.
+ */
+@theme {
+  --color-ink: #16263a;
+  --color-muted: #5b6b7b;
+  --color-ground: #f3f6f8;
+  --color-surface: #ffffff;
+  --color-line: #d9e1e7;
+
+  --color-foam: #0e7c86;
+  --color-foam-dark: #0a5f66;
+  --color-plate: #f5c518;
+
+  --color-status-waiting: #5b6b7b;
+  --color-status-washing: #b76e00;
+  --color-status-grace: #c2410c;
+  --color-status-done: #15803d;
+
+  --font-display: 'Noto Kufi Arabic', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans Arabic', system-ui, 'Segoe UI', Tahoma, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    background: var(--color-ground);
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-foam);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}

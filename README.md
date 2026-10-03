@@ -13,10 +13,24 @@ finance reports, thermal receipts. Arabic RTL, prices in Syrian pounds, works of
 
 ```bash
 pnpm install
-pnpm test        # all unit tests
+docker compose up -d                 # PostgreSQL (dev + test databases)
+cp apps/api/.env.example apps/api/.env
+pnpm --filter @carwash/shared build  # the apps use the built shared package
+
+pnpm --filter @carwash/api dev       # API on http://localhost:3000/api
+pnpm --filter @carwash/web dev       # website on http://localhost:5173
+```
+
+## Checks
+
+```bash
+pnpm test        # all tests (API tests need the test database)
 pnpm typecheck
 pnpm lint
+pnpm format:check
 ```
+
+The same checks run on GitHub for every push.
 
 ## Structure
 
