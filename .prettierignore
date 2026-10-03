@@ -1,0 +1,8 @@
+# Written by pnpm in its own format; formatting it makes every install a huge diff.
+pnpm-lock.yaml
+
+# Generated
+**/dist/
+**/drizzle/meta/
+e2e/test-results/
+e2e/playwright-report/

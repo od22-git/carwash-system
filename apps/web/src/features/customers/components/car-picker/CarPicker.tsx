@@ -13,11 +13,17 @@ interface CarPickerProps {
  * or register a new car and its customer.
  */
 export function CarPicker({ onPick }: CarPickerProps) {
-  const { customers, vehicles } = useCustomerDirectory();
+  const { customers, vehicles, loading } = useCustomerDirectory();
   const [newPlate, setNewPlate] = useState<string | null>(null);
 
   return newPlate === null ? (
-    <PlateLookup vehicles={vehicles} customers={customers} onPick={onPick} onNewCar={setNewPlate} />
+    <PlateLookup
+      vehicles={vehicles}
+      customers={customers}
+      loading={loading}
+      onPick={onPick}
+      onNewCar={setNewPlate}
+    />
   ) : (
     <NewCarForm
       plate={newPlate}
