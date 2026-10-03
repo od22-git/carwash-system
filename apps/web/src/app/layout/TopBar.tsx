@@ -1,19 +1,29 @@
-import { ROLE_LABELS, type Role } from '@carwash/shared';
+import { ROLE_LABELS, type SessionUser } from '@carwash/shared';
+import { useNavigate } from 'react-router';
+import { logout } from '../../core/auth';
+import { Button } from '../../shared/ui';
 import { ConnectionStatus } from './ConnectionStatus';
 
-interface TopBarProps {
-  userName: string;
-  role: Role;
-}
+export function TopBar({ user }: { user: SessionUser }) {
+  const navigate = useNavigate();
 
-export function TopBar({ userName, role }: TopBarProps) {
+  async function signOut() {
+    await logout();
+    navigate('/login', { replace: true });
+  }
+
   return (
-    <div className="flex items-center justify-between border-b border-line bg-surface px-6 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-surface px-6 py-3">
       <ConnectionStatus />
-      <p className="text-sm">
-        <span className="font-semibold">{userName}</span>
-        <span className="text-muted"> ({ROLE_LABELS[role]})</span>
-      </p>
+      <div className="flex items-center gap-4 text-sm">
+        <p>
+          <span className="font-semibold">{user.name}</span>
+          <span className="text-muted"> ({ROLE_LABELS[user.role]})</span>
+        </p>
+        <Button variant="quiet" onClick={() => void signOut()}>
+          تسجيل الخروج
+        </Button>
+      </div>
     </div>
   );
 }

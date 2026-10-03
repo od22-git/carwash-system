@@ -7,7 +7,8 @@ apps/
   api/        NestJS server (PostgreSQL via Drizzle ORM)
   web/        React + Vite PWA, Arabic RTL, works offline
 packages/
-  shared/     Business rules + types used by BOTH api and web
+  shared/     Business rules, types and API contracts used by BOTH api and web
+e2e/          Browser tests (Playwright): two laptops, offline work, sync
 docs/         This file and other project docs
 ```
 
@@ -67,6 +68,9 @@ repositories never contain business rules.
 
 ## apps/web — feature folders
 
+React Router for screens, Dexie (IndexedDB) for the laptop database, `useLiveQuery` so
+screens update by themselves when data changes (saved here or synced from the other laptop).
+
 ```
 src/
   app/          router, providers, layout shell (RTL), menus per role
@@ -90,8 +94,10 @@ feature only through that feature's `index.ts`.
 
 ## Offline sync in one paragraph
 
-Every record has a UUID made on the laptop. Writes go to IndexedDB and to an outbox.
+Every record has a UUID made on the laptop. Features write only through `saveRecord()`
+(core/sync), which saves to IndexedDB and to an outbox in one transaction.
 The sync worker pushes the outbox to `POST /sync/push` (safe to repeat) and pulls
 changes from `GET /sync/pull?since=…`, filtered by role. Money and stock are append-only
 ledgers, so the two laptops never overwrite each other; editable records (customers,
-settings) use last-write-wins on `updatedAt`.
+settings) use last-write-wins on `updatedAt`. A new synced table needs: a `syncColumns()`
+table + `SyncEntry` registered by its API module, and one line in `core/db/synced-tables.ts`.

@@ -28,6 +28,8 @@ pnpm test        # all tests (API tests need the test database)
 pnpm typecheck
 pnpm lint
 pnpm format:check
+
+pnpm build && pnpm --filter @carwash/e2e e2e   # browser tests: two laptops, offline, sync
 ```
 
 The same checks run on GitHub for every push.
