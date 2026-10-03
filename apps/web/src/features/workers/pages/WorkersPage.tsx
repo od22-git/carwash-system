@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Button, PageHeader, Panel } from '../../../shared/ui';
 import { WorkerForm } from '../components/WorkerForm';
+import { PayrollSection } from '../components/payroll/PayrollSection';
 import { WorkersTable } from '../components/WorkersTable';
 import { useWorkers } from '../hooks/use-workers';
 
-/** `editing` is a worker id, "new", or null. Pay reports come in milestone 6. */
+/** The workers, how each is paid, and the pay for a day, week or month. */
 export function WorkersPage() {
   const { workers, loading } = useWorkers();
   const [editing, setEditing] = useState<string | null>(null);
@@ -30,6 +31,7 @@ export function WorkersPage() {
       ) : (
         <WorkersTable workers={workers} onEdit={setEditing} />
       )}
+      {workers.length > 0 && <PayrollSection />}
     </div>
   );
 }

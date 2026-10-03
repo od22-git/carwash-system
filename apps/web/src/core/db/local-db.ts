@@ -14,6 +14,7 @@ import type {
   SyncRecord,
   TicketRecord,
   VehicleRecord,
+  WorkerPaymentRecord,
   WorkerPublic,
 } from '@carwash/shared';
 import Dexie, { type EntityTable } from 'dexie';
@@ -69,6 +70,8 @@ export class LocalDb extends Dexie {
   /** Purchases, counts and damage: pulled only on the admin's laptop. */
   stockMovements!: EntityTable<StockMovementRecord, 'id'>;
   sales!: EntityTable<SaleRecord, 'id'>;
+  /** Advances and wages: admin's laptop only. */
+  workerPayments!: EntityTable<WorkerPaymentRecord, 'id'>;
 
   constructor(name = 'carwash') {
     super(name);
@@ -100,6 +103,9 @@ export class LocalDb extends Dexie {
       products: 'id, kind, barcode',
       stockMovements: 'id, productId, at',
       sales: 'id, soldAt',
+    });
+    this.version(6).stores({
+      workerPayments: 'id, workerId, at',
     });
   }
 }

@@ -6,6 +6,7 @@ export * from './CommitInput';
 export * from './Field';
 export * from './Notice';
 export * from './PageHeader';
+export * from './PeriodPicker';
 export * from './Panel';
 export * from './PlateChip';
 export * from './RegisterPanel';

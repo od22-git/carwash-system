@@ -5,20 +5,24 @@ export interface WorkerPayInput {
   payType: PayType;
   /** Amount per day / per week, or the commission percent (30 = 30%). */
   rate: number;
-  /** Wash prices of the cars this worker finished in the period (garage fees not included). */
+  /** Service prices of the cars this worker washed in the period (garage fees not included). */
   washPrices: SYP[];
+  /** Days in the period with at least one car (fixed daily pay). */
   daysWorked: number;
+  /** Weeks in the period with at least one car (fixed weekly pay). */
   weeksWorked: number;
-  /** Advances already taken in the period. */
-  advances: SYP;
+  /** Advances and wage payments already given in the period. */
+  paid: SYP;
 }
 
 export interface WorkerPayResult {
   cars: number;
   washRevenue: SYP;
+  /** What the worker earned in the period. */
   gross: SYP;
-  advances: SYP;
-  net: SYP;
+  paid: SYP;
+  /** Still owed (negative = paid ahead). */
+  due: SYP;
 }
 
 function grossPay(input: WorkerPayInput, washRevenue: SYP): SYP {
@@ -35,6 +39,7 @@ function grossPay(input: WorkerPayInput, washRevenue: SYP): SYP {
   }
 }
 
+/** A worker is paid fixed (daily or weekly) OR by commission on the wash price, never both. */
 export function workerPay(input: WorkerPayInput): WorkerPayResult {
   const washRevenue = input.washPrices.reduce((a, b) => a + b, 0);
   const gross = grossPay(input, washRevenue);
@@ -42,7 +47,7 @@ export function workerPay(input: WorkerPayInput): WorkerPayResult {
     cars: input.washPrices.length,
     washRevenue,
     gross,
-    advances: input.advances,
-    net: gross - input.advances,
+    paid: input.paid,
+    due: gross - input.paid,
   };
 }

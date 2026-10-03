@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { registerSyncTables, SyncModule } from '../sync';
-import { workersSync } from './workers.sync';
+import { workerPaymentsSync, workersSync } from './workers.sync';
 
-@Module({ imports: [SyncModule], providers: [registerSyncTables(workersSync)] })
+@Module({ imports: [SyncModule], providers: [registerSyncTables(workersSync, workerPaymentsSync)] })
 export class WorkersModule {}

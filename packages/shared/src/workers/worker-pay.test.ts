@@ -7,13 +7,13 @@ const base: WorkerPayInput = {
   washPrices: [25_000, 35_000, 40_000],
   daysWorked: 6,
   weeksWorked: 1,
-  advances: 0,
+  paid: 0,
 };
 
 describe('workerPay', () => {
   it('commission = percent of the wash prices', () => {
     const r = workerPay(base);
-    expect(r).toMatchObject({ cars: 3, washRevenue: 100_000, gross: 30_000, net: 30_000 });
+    expect(r).toMatchObject({ cars: 3, washRevenue: 100_000, gross: 30_000, due: 30_000 });
   });
 
   it('fixed daily ignores the number of cars', () => {
@@ -24,8 +24,9 @@ describe('workerPay', () => {
     expect(workerPay({ ...base, payType: 'fixed_weekly', rate: 280_000 }).gross).toBe(280_000);
   });
 
-  it('subtracts advances', () => {
-    expect(workerPay({ ...base, advances: 10_000 }).net).toBe(20_000);
+  it('subtracts advances and wages already paid; paying ahead shows as negative', () => {
+    expect(workerPay({ ...base, paid: 10_000 }).due).toBe(20_000);
+    expect(workerPay({ ...base, paid: 40_000 }).due).toBe(-10_000);
   });
 
   it('rejects an impossible commission', () => {

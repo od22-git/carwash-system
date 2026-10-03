@@ -1,6 +1,6 @@
-import { PAY_FIELDS, workerRecordSchema } from '@carwash/shared';
+import { PAY_FIELDS, workerPaymentRecordSchema, workerRecordSchema } from '@carwash/shared';
 import type { SyncEntry, WireRow } from '../sync';
-import { workers } from './workers.schema';
+import { workerPayments, workers } from './workers.schema';
 
 /** The cashier picks a worker for each car but never sees how workers are paid. */
 function hidePayFromCashier(row: WireRow, user: { role: string }): WireRow {
@@ -17,4 +17,13 @@ export const workersSync: SyncEntry = {
   pushRoles: ['admin'],
   pullRoles: ['admin', 'user'],
   project: hidePayFromCashier,
+};
+
+/** What workers were given (advances, wages): only the admin writes and sees it. */
+export const workerPaymentsSync: SyncEntry = {
+  name: 'workerPayments',
+  table: workerPayments,
+  schema: workerPaymentRecordSchema as unknown as SyncEntry['schema'],
+  pushRoles: ['admin'],
+  pullRoles: ['admin'],
 };

@@ -13,6 +13,7 @@ import {
   subscriptionRecordSchema,
   ticketRecordSchema,
   vehicleRecordSchema,
+  workerPaymentRecordSchema,
   workerRecordSchema,
 } from '@carwash/shared';
 import type { ZodType } from 'zod';
@@ -35,4 +36,5 @@ export const RECORD_SCHEMAS: Record<SyncedTable, ZodType> = {
   products: productRecordSchema,
   stockMovements: stockMovementRecordSchema,
   sales: saleRecordSchema,
+  workerPayments: workerPaymentRecordSchema,
 };
