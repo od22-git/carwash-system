@@ -1,7 +1,9 @@
-# Local development database. Production compose (api + web + caddy) is added at deploy time.
+# Local development database. Works with Docker and with Podman (podman-compose).
+# Production compose (api + web + caddy) is added at deploy time.
 services:
   postgres:
-    image: postgres:16-alpine
+    # Full image name: Podman does not guess the registry for short names.
+    image: docker.io/library/postgres:16-alpine
     environment:
       POSTGRES_USER: carwash
       POSTGRES_PASSWORD: carwash
@@ -10,7 +12,8 @@ services:
       - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./scripts/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql:ro
+      # `z` lets the container read the file on SELinux systems (Fedora); ignored elsewhere.
+      - ./scripts/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql:ro,z
 
 volumes:
   pgdata:
