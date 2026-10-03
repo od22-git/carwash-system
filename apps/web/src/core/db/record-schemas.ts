@@ -1,9 +1,13 @@
 import {
   auditEventRecordSchema,
   customerRecordSchema,
+  packageRecordSchema,
+  parkingPlanRecordSchema,
+  parkingSessionRecordSchema,
   servicePriceRecordSchema,
   serviceRecordSchema,
   settingRecordSchema,
+  subscriptionRecordSchema,
   ticketRecordSchema,
   vehicleRecordSchema,
   workerRecordSchema,
@@ -21,4 +25,8 @@ export const RECORD_SCHEMAS: Record<SyncedTable, ZodType> = {
   workers: workerRecordSchema,
   tickets: ticketRecordSchema,
   auditEvents: auditEventRecordSchema,
+  parkingPlans: parkingPlanRecordSchema,
+  parkingSessions: parkingSessionRecordSchema,
+  packages: packageRecordSchema,
+  subscriptions: subscriptionRecordSchema,
 };

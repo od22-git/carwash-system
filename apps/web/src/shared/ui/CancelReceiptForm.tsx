@@ -1,19 +1,23 @@
-import type { TicketRecord } from '@carwash/shared';
 import { useState, type FormEvent } from 'react';
-import { useAction } from '../../../../shared/lib/use-action';
-import { Button, Field, Notice } from '../../../../shared/ui';
-import { useWash } from '../../hooks/wash-context';
-import { cancelTicket } from '../../lib/ticket-actions';
+import { useAction } from '../lib/use-action';
+import { Button } from './Button';
+import { Field } from './Field';
+import { Notice } from './Notice';
+
+interface CancelReceiptFormProps {
+  /** Cancels and logs; the reason may be empty. */
+  onConfirm: (reason: string) => Promise<unknown>;
+  onDone: () => void;
+}
 
 /** Admin only. The reason is optional; the cancellation is logged either way. */
-export function CancelTicketForm({ ticket, onDone }: { ticket: TicketRecord; onDone: () => void }) {
-  const { user } = useWash();
+export function CancelReceiptForm({ onConfirm, onDone }: CancelReceiptFormProps) {
   const [reason, setReason] = useState('');
   const action = useAction();
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (await action.run(() => cancelTicket(ticket, reason, user))) onDone();
+    if (await action.run(() => onConfirm(reason))) onDone();
   }
 
   return (

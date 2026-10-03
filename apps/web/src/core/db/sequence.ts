@@ -1,3 +1,4 @@
+import { customerCode, receiptNumber } from '@carwash/shared';
 import { db } from './local-db';
 import { getMeta, setMeta } from './meta';
 
@@ -15,3 +16,17 @@ export function nextSequence(kind: SequenceKind): Promise<number> {
     return next;
   });
 }
+
+async function devicePrefix(): Promise<string> {
+  const device = await getMeta('device');
+  if (!device) throw new Error('This laptop is not registered yet.');
+  return device.prefix;
+}
+
+/** "A-000123": one series for every receipt this laptop prints (wash, garage, package). */
+export const nextReceiptNo = async () =>
+  receiptNumber(await devicePrefix(), await nextSequence('receipt'));
+
+/** "A-0012": the customer's code. */
+export const nextCustomerCode = async () =>
+  customerCode(await devicePrefix(), await nextSequence('customer'));

@@ -1,19 +1,18 @@
-import {
-  CAR_SIZE_LABELS,
-  formatSYP,
-  type CustomerRecord,
-  type TicketRecord,
-  type VehicleRecord,
-} from '@carwash/shared';
+import type { CustomerRecord, TicketRecord, VehicleRecord } from '@carwash/shared';
 import { useState, type FormEvent } from 'react';
 import { useAction } from '../../../../shared/lib/use-action';
-import { Button, Field, Notice, PlateChip } from '../../../../shared/ui';
+import { Field, Notice } from '../../../../shared/ui';
 import { useCatalog } from '../../../catalog';
+import { CarHeader } from '../../../customers';
+import { useVehicleSubscription } from '../../../garage';
 import { useActiveWorkers } from '../../../workers';
+import { packageUse } from '../../lib/package-use';
 import { priceWash } from '../../lib/price-wash';
 import { createTicket } from '../../lib/ticket-actions';
 import { busyWorkerIds, waitingCounts } from '../../lib/worker-load';
+import { PackageWashChoice } from './PackageWashChoice';
 import { ServicePicker } from './ServicePicker';
+import { WashSubmitBar } from './WashSubmitBar';
 import { WorkerPicker } from './WorkerPicker';
 
 interface WashOptionsProps {
@@ -24,33 +23,31 @@ interface WashOptionsProps {
   onChangeCar: () => void;
 }
 
-/** Step 2: services and worker, then the car goes on the board. */
-export function WashOptions({
-  customer,
-  vehicle,
-  openTickets,
-  onCreated,
-  onChangeCar,
-}: WashOptionsProps) {
+/** Services, worker and (if the car has a package) a free wash; then the car goes on the board. */
+export function WashOptions({ customer, vehicle, openTickets, ...props }: WashOptionsProps) {
   const { services, matrix } = useCatalog();
   const workers = useActiveWorkers();
+  const [openedAt] = useState(Date.now);
+  const current = useVehicleSubscription(vehicle.id, openedAt) ?? null;
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [workerId, setWorkerId] = useState<string | null>(null);
   const [requested, setRequested] = useState(false);
+  const [useFreeWash, setUseFreeWash] = useState(true);
   const [notes, setNotes] = useState('');
   const action = useAction();
 
   const priced = priceWash([...selected], vehicle.size, services, matrix);
+  const pkg = packageUse(current, priced.lines, useFreeWash);
   const busy = busyWorkerIds(openTickets);
   const workerBusy = workerId !== null && busy.has(workerId);
-  const alreadyOnBoard = openTickets.some((t) => t.vehicleId === vehicle.id);
+  const nameOf = (id: string) => services.find((s) => s.id === id)?.name ?? '';
   const toggle = (id: string) =>
     setSelected((s) => (s.has(id) ? new Set([...s].filter((x) => x !== id)) : new Set(s).add(id)));
 
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!workerId) return;
-    const input = {
+    const ticket = {
       customer,
       vehicle,
       lines: priced.lines,
@@ -58,24 +55,27 @@ export function WashOptions({
       requestedWorker: requested,
       workerBusy,
       notes,
+      packageUse: pkg,
     };
-    await action.run(async () => onCreated(await createTicket(input)));
+    await action.run(async () => props.onCreated(await createTicket(ticket)));
   }
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-5">
-      <div className="flex flex-wrap items-center gap-3">
-        <PlateChip plate={vehicle.plate} size="lg" />
-        <span className="font-semibold">{customer.name}</span>
-        <span className="text-muted">{CAR_SIZE_LABELS[vehicle.size]}</span>
-        <Button variant="quiet" onClick={onChangeCar}>
-          تغيير السيارة
-        </Button>
-      </div>
-      {alreadyOnBoard && (
+      <CarHeader vehicle={vehicle} customer={customer} onChangeCar={props.onChangeCar} />
+      {openTickets.some((t) => t.vehicleId === vehicle.id) && (
         <Notice tone="error">
           هذه السيارة موجودة على اللوحة الآن. تأكد قبل تسجيلها مرة ثانية.
         </Notice>
+      )}
+      {current && (
+        <PackageWashChoice
+          current={current}
+          coveredNames={current.subscription.washServiceIds.map(nameOf).filter(Boolean)}
+          discount={pkg.packageDiscount}
+          useFreeWash={useFreeWash}
+          onUseFreeWash={setUseFreeWash}
+        />
       )}
       <ServicePicker
         services={services.filter((s) => s.active)}
@@ -95,12 +95,11 @@ export function WashOptions({
       />
       <Field label="ملاحظات (اختياري)" value={notes} onChange={(e) => setNotes(e.target.value)} />
       {action.error && <Notice tone="error">{action.error}</Notice>}
-      <div className="flex flex-wrap items-center gap-4 border-t border-line pt-4">
-        <p className="font-display text-xl font-bold">المجموع: {formatSYP(priced.total)}</p>
-        <Button type="submit" disabled={action.busy || priced.lines.length === 0 || !workerId}>
-          {workerBusy ? 'تسجيل (بانتظار العامل)' : 'بدء الغسيل'}
-        </Button>
-      </div>
+      <WashSubmitBar
+        total={priced.total - pkg.packageDiscount}
+        waits={workerBusy}
+        disabled={action.busy || priced.lines.length === 0 || !workerId}
+      />
     </form>
   );
 }

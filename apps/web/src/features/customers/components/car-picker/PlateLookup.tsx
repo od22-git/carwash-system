@@ -11,7 +11,7 @@ interface PlateLookupProps {
 
 const MAX_SUGGESTIONS = 6;
 
-/** Step 1: the plate. A known car brings its customer; an unknown one starts a new car. */
+/** The plate. A known car brings its customer; an unknown one starts a new car. */
 export function PlateLookup({ vehicles, customers, onPick, onNewCar }: PlateLookupProps) {
   const [plate, setPlate] = useState('');
   const key = plateSearchKey(plate);

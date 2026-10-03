@@ -7,6 +7,7 @@ export * from './garage';
 export * from './money';
 export * from './settings';
 export * from './stock';
+export * from './subscriptions';
 export * from './tickets';
 export * from './users';
 export * from './whatsapp';

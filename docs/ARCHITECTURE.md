@@ -29,16 +29,19 @@ docs/         This file and other project docs
 
 ```
 src/
-  common/      time helpers, base types (SYP)
-  money/       format-syp, receipt-number
-  catalog/     car-size, wash-price
-  garage/      garage-settings, pickup-fee, parking-fee
-  tickets/     ticket-status (allowed status changes)
-  workers/     pay-type, worker-pay
-  stock/       product-kind, stock-ledger, units, daily-waste
-  customers/   syrian-phone, arabic-name, duplicates
-  whatsapp/    template, link
-  users/       role
+  common/        time helpers, numbering, base types (SYP)
+  contracts/     sync + auth API shapes, shared record fields (carReceiptFields, nullableTime)
+  money/         format-syp
+  catalog/       car-size, wash-price, service records
+  garage/        garage-settings, pickup-fee, parking-fee, covered-fee, plans and sessions
+  subscriptions/ packages, subscriptions sold per car, free-wash use
+  tickets/       ticket-status (allowed status changes), ticket-totals
+  workers/       pay-type, worker-pay
+  stock/         product-kind, stock-ledger, units, daily-waste
+  customers/     syrian-phone, arabic-name, duplicates, plate
+  whatsapp/      template, link
+  audit/         audit events (cancellations)
+  users/         role
 ```
 
 Pure functions only: no database, no network, no React.
@@ -90,7 +93,16 @@ src/
 ```
 
 A feature may import from `shared/`, `core/` and `@carwash/shared`, and from another
-feature only through that feature's `index.ts`.
+feature only through that feature's `index.ts`. Feature imports go one way:
+`settings, customers, catalog, workers` ← `garage` ← `wash`.
+
+Reused building blocks:
+
+- `customers`: `CarPicker` (plate → known car, or a new car and customer) and `CarHeader`.
+- `shared/ui`: `RegisterPanel` (the framed form above a board), `Receipt` / `ReceiptRow`
+  (80 mm print layout), `CancelReceiptForm` (admin cancel with optional reason), `Table`.
+- `core/db`: `nextReceiptNo()` — one receipt series per laptop for wash, garage and packages.
+- `core/audit`: `logAudit()` for sensitive actions.
 
 ## Offline sync in one paragraph
 
@@ -106,7 +118,9 @@ settings) use last-write-wins on `updatedAt`.
 1. `packages/shared`: a zod record schema built on `syncRecordBase`.
 2. `apps/api/src/modules/<feature>/`: `<feature>.schema.ts` (table with `syncColumns()`),
    `<feature>.sync.ts` (a `SyncEntry`: who may push / pull, optional `project` to hide fields
-   per role), and `providers: [registerSyncTables(entry)]` in the module. Export the table from
+   per role, optional `authorize` — use `receiptRules([...locked statuses])` for anything with a
+   printed receipt, `appendOnly` for logs), and `providers: [registerSyncTables(entry)]` in the
+   module. Export the table from
    `database/schema.ts`, then `pnpm --filter @carwash/api db:generate --name <change>`.
 3. `apps/web/src/core/db/`: a new `version()` block in `local-db.ts`, one line in
    `synced-tables.ts`, and the schema in `record-schemas.ts` (the laptop validates before saving).

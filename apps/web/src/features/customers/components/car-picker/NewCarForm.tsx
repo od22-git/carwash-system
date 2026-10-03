@@ -7,7 +7,8 @@ import {
 import { useState, type FormEvent } from 'react';
 import { useAction } from '../../../../shared/lib/use-action';
 import { Button, Field, Notice, PlateChip } from '../../../../shared/ui';
-import { CarSizePicker, createCustomer, saveVehicle } from '../../../customers';
+import { createCustomer, saveVehicle } from '../../lib/customer-actions';
+import { CarSizePicker } from '../CarSizePicker';
 
 interface NewCarFormProps {
   plate: string;
@@ -16,7 +17,7 @@ interface NewCarFormProps {
   onCancel: () => void;
 }
 
-/** Step 1b: an unknown plate. The phone finds an existing customer, or a new one is made. */
+/** An unknown plate. The phone finds an existing customer, or a new one is made. */
 export function NewCarForm({ plate, customers, onReady, onCancel }: NewCarFormProps) {
   const [phone, setPhone] = useState('');
   const [name, setName] = useState('');

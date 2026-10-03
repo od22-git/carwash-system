@@ -6,7 +6,9 @@ import {
 } from '@carwash/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { db } from '../../../core/db';
+import type { VehicleSubscription } from '../../garage';
 import { freshLaptop } from '../../../core/sync/test-helpers';
+import { packageUse } from './package-use';
 import { priceWash } from './price-wash';
 import { cancelTicket, createTicket, deliver, markNotified, startWashing } from './ticket-actions';
 import { busyWorkerIds, waitingCounts } from './worker-load';
@@ -87,6 +89,34 @@ describe('wash tickets', () => {
       garageHours: 4,
       total: 90_000,
     });
+  });
+
+  it('a free wash from the package takes the covered services off the bill', async () => {
+    const lines = priceWash(['s1', 's2'], 'suv', services, matrix).lines;
+    const subscription = {
+      id: 'sub1',
+      washServiceIds: ['s1'],
+      includesParking: true,
+      endsAt: 9e12,
+    };
+    const current = { subscription, washesLeft: 2 } as unknown as VehicleSubscription;
+    const ticket = await createTicket({
+      customer,
+      vehicle,
+      lines,
+      workerId: 'w1',
+      requestedWorker: false,
+      workerBusy: false,
+      notes: '',
+      packageUse: packageUse(current, lines, true),
+    });
+    expect(ticket).toMatchObject({
+      subscriptionId: 'sub1',
+      packageDiscount: 30_000,
+      total: 20_000,
+    });
+    expect(ticket.coveredUntil).toBe(9e12);
+    expect(packageUse({ ...current, washesLeft: 0 }, lines, true).packageDiscount).toBe(0);
   });
 
   it('refuses to skip steps', async () => {

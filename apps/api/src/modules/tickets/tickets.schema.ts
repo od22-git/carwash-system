@@ -17,7 +17,10 @@ export const tickets = pgTable(
     requestedWorker: boolean('requested_worker').notNull().default(false),
     status: text('status').notNull(),
     lines: jsonb('lines').$type<TicketLine[]>().notNull(),
+    subscriptionId: text('subscription_id'),
+    packageDiscount: integer('package_discount').notNull().default(0),
     washTotal: integer('wash_total').notNull(),
+    coveredUntil: epochMs('covered_until'),
     garageFee: integer('garage_fee').notNull().default(0),
     garageHours: integer('garage_hours').notNull().default(0),
     total: integer('total').notNull(),
@@ -33,5 +36,6 @@ export const tickets = pgTable(
   (t) => [
     index('tickets_arrived_at_idx').on(t.arrivedAt),
     index('tickets_worker_idx').on(t.workerId),
+    index('tickets_subscription_idx').on(t.subscriptionId),
   ],
 );

@@ -1,12 +1,11 @@
 import {
-  customerCode,
   normalizePlate,
   normalizeSyrianPhone,
   type CarSize,
   type CustomerRecord,
   type VehicleRecord,
 } from '@carwash/shared';
-import { getMeta, nextSequence } from '../../../core/db';
+import { nextCustomerCode } from '../../../core/db';
 import { deleteRecord, saveRecord } from '../../../core/sync';
 
 export interface CustomerInput {
@@ -33,9 +32,7 @@ function cleanCustomer(input: CustomerInput) {
 
 export async function createCustomer(input: CustomerInput): Promise<CustomerRecord> {
   const fields = cleanCustomer(input);
-  const device = await getMeta('device');
-  if (!device) throw new Error('This laptop is not registered yet.');
-  const code = customerCode(device.prefix, await nextSequence('customer'));
+  const code = await nextCustomerCode();
   return (await saveRecord('customers', { ...fields, code })) as CustomerRecord;
 }
 

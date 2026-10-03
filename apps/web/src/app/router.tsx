@@ -4,6 +4,7 @@ import { RequireAuth, RequireRole } from '../core/auth';
 import { LoginPage, SetupPage } from '../features/auth';
 import { ServicesPage } from '../features/catalog';
 import { CustomersPage } from '../features/customers';
+import { GaragePage, PackagesPage } from '../features/garage';
 import { SettingsPage } from '../features/settings';
 import { WashPage } from '../features/wash';
 import { WorkersPage } from '../features/workers';
@@ -14,6 +15,8 @@ import { PlaceholderPage } from './PlaceholderPage';
 /** Screens that are built. The rest show a placeholder until their milestone. */
 const PAGES: Record<string, ReactNode> = {
   '/wash': <WashPage />,
+  '/garage': <GaragePage />,
+  '/packages': <PackagesPage />,
   '/customers': <CustomersPage />,
   '/workers': <WorkersPage />,
   '/services': <ServicesPage />,

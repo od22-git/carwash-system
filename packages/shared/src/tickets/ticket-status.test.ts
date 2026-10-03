@@ -60,4 +60,9 @@ describe('deliveryTotals', () => {
       45_000,
     );
   });
+
+  it('no garage fee when the car package includes the garage', () => {
+    const covered = { ...notified, coveredUntil: t0 + min(60 * 24) };
+    expect(deliveryTotals(covered, t0 + min(255), S).total).toBe(45_000);
+  });
 });

@@ -6,8 +6,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { DevicesModule } from './modules/devices/devices.module';
+import { GarageModule } from './modules/garage/garage.module';
 import { HealthModule } from './modules/health/health.module';
 import { SettingsModule } from './modules/settings/settings.module';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { SyncModule } from './modules/sync';
 import { TicketsModule } from './modules/tickets/tickets.module';
 import { UsersModule } from './modules/users/users.module';
@@ -27,6 +29,8 @@ import { WorkersModule } from './modules/workers/workers.module';
     CatalogModule,
     WorkersModule,
     TicketsModule,
+    GarageModule,
+    SubscriptionsModule,
     AuditModule,
     HealthModule,
   ],

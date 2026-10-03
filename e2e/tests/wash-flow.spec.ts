@@ -10,7 +10,7 @@ import {
 } from './support/helpers';
 import { localRows } from './support/local-db';
 import { resetDatabase } from './support/reset-database';
-import { card, column, registerNewCar } from './support/wash';
+import { card, column, registerWash } from './support/wash';
 
 const BOTH = [SERVICES.exterior, SERVICES.underbody]; // 25,000 + 20,000 for a sedan
 
@@ -38,7 +38,7 @@ test.describe.serial('milestone 3: the wash flow', () => {
   });
 
   test('a new car is registered and goes straight to washing', async () => {
-    await registerNewCar(reception, {
+    await registerWash(reception, {
       plate: 'حلب 555',
       phone: '0933111222',
       name: 'سامر',
@@ -50,7 +50,7 @@ test.describe.serial('milestone 3: the wash flow', () => {
   });
 
   test('a customer who asks for the busy worker waits for him', async () => {
-    await registerNewCar(reception, {
+    await registerWash(reception, {
       plate: 'دمشق 777',
       phone: '0944555666',
       name: 'ليلى',
@@ -121,7 +121,7 @@ test.describe.serial('milestone 3: the wash flow', () => {
 
   test('a car registered offline reaches the admin board when back online', async () => {
     await receptionLaptop.setOffline(true);
-    await registerNewCar(reception, {
+    await registerWash(reception, {
       plate: 'حمص 31',
       phone: '0955000111',
       name: 'رامي',

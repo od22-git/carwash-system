@@ -1,16 +1,15 @@
 import { deliveryTotals, formatSYP, type TicketRecord } from '@carwash/shared';
 import { useState } from 'react';
 import { useAction } from '../../../../shared/lib/use-action';
-import { Button, Notice } from '../../../../shared/ui';
+import { Button, CancelReceiptForm, Notice } from '../../../../shared/ui';
 import { useWash } from '../../hooks/wash-context';
-import { deliver, markNotified, startWashing } from '../../lib/ticket-actions';
+import { cancelTicket, deliver, markNotified, startWashing } from '../../lib/ticket-actions';
 import { PrintReceiptButton } from '../receipt/PrintReceiptButton';
-import { CancelTicketForm } from './CancelTicketForm';
 import { NotifyCustomer } from './NotifyCustomer';
 
 /** Only the next sensible steps for the car's status. */
 export function TicketActions({ ticket, now }: { ticket: TicketRecord; now: number }) {
-  const { garage, isAdmin } = useWash();
+  const { garage, isAdmin, user } = useWash();
   const [cancelling, setCancelling] = useState(false);
   const action = useAction();
   const run = (fn: () => Promise<unknown>) => void action.run(fn);
@@ -44,7 +43,12 @@ export function TicketActions({ ticket, now }: { ticket: TicketRecord; now: numb
           </Button>
         )}
       </div>
-      {cancelling && <CancelTicketForm ticket={ticket} onDone={() => setCancelling(false)} />}
+      {cancelling && (
+        <CancelReceiptForm
+          onConfirm={(reason) => cancelTicket(ticket, reason, user)}
+          onDone={() => setCancelling(false)}
+        />
+      )}
       {action.error && <Notice tone="error">{action.error}</Notice>}
     </div>
   );

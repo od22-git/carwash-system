@@ -10,6 +10,7 @@ describe('time formatting', () => {
   it('shows short durations', () => {
     expect(formatDuration(80 * 60_000)).toBe('1 س 20 د');
     expect(formatDuration(5 * 60_000)).toBe('5 د');
+    expect(formatDuration((50 * 60 + 5) * 60_000)).toBe('2 ي 2 س');
   });
 
   it('finds local midnight', () => {

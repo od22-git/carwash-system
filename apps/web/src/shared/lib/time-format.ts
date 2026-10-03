@@ -18,10 +18,12 @@ export function formatCountdown(ms: number): string {
   return `${Math.floor(total / 60)}:${pad(total % 60)}`;
 }
 
-/** "منذ 1 س 20 د" style durations, short enough for a card. */
+/** "1 س 20 د" / "2 ي 3 س" style durations, short enough for a card. */
 export function formatDuration(ms: number): string {
   const minutes = Math.max(0, Math.floor(ms / 60_000));
   const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  if (days > 0) return `${days} ي ${hours % 24} س`;
   return hours > 0 ? `${hours} س ${minutes % 60} د` : `${minutes} د`;
 }
 
@@ -30,4 +32,11 @@ export function startOfDay(ms: number): number {
   const d = new Date(ms);
   d.setHours(0, 0, 0, 0);
   return d.getTime();
+}
+
+/** The time if `ms` is today, else the date and time (a car parked since yesterday). */
+export function formatWhen(ms: number, now: number): string {
+  return startOfDay(ms) === startOfDay(now)
+    ? formatTime(ms)
+    : `${formatDate(ms)} ${formatTime(ms)}`;
 }

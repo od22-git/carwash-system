@@ -7,10 +7,14 @@ import {
 } from '@carwash/shared';
 import { db } from '../../../core/db';
 import { deleteRecord, saveRecord } from '../../../core/sync';
+import { nextSortOrder } from '../../../shared/lib/sort-order';
 
 export async function addService(name: string, existing: ServiceRecord[]) {
-  const sortOrder = Math.max(0, ...existing.map((s) => s.sortOrder)) + 1;
-  return saveRecord('services', { name: name.trim(), sortOrder, active: true });
+  return saveRecord('services', {
+    name: name.trim(),
+    sortOrder: nextSortOrder(existing),
+    active: true,
+  });
 }
 
 /** Adds the nine services from the proposal, with no prices yet. */

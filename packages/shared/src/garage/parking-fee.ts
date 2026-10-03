@@ -1,9 +1,7 @@
-import { HOUR_MS, MINUTE_MS, startedHours, toMs, type Instant, type SYP } from '../common';
+import { HOUR_MS, MINUTE_MS, startedHours, toMs, type Instant } from '../common';
 import { NO_FEE, type FeeResult } from './fee-result';
 import type { GarageSettings } from './garage-settings';
-
-/** A parking plan the admin defines: by the hour, or a fixed period (a day, two days, ...). */
-export type ParkingPlan = { kind: 'hourly' } | { kind: 'fixed'; durationHours: number; price: SYP };
+import type { ParkingPlan } from './parking-plan';
 
 /**
  * Fee for a normal parking session.

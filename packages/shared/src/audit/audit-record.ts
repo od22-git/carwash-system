@@ -1,11 +1,13 @@
 import { z } from 'zod';
 import { syncRecordBase } from '../contracts/sync';
 
-export const AUDIT_ACTIONS = ['ticket.cancel'] as const;
+export const AUDIT_ACTIONS = ['ticket.cancel', 'parking.cancel', 'subscription.cancel'] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
 export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {
-  'ticket.cancel': 'إلغاء إيصال',
+  'ticket.cancel': 'إلغاء إيصال غسيل',
+  'parking.cancel': 'إلغاء إيصال كراج',
+  'subscription.cancel': 'إلغاء اشتراك',
 };
 
 /**

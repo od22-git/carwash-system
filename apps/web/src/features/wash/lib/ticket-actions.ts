@@ -2,7 +2,7 @@ import {
   canMoveTicket,
   deliveryTotals,
   formatSYP,
-  receiptNumber,
+  sumLines,
   type CustomerRecord,
   type GarageSettings,
   type SessionUser,
@@ -11,8 +11,10 @@ import {
   type TicketStatus,
   type VehicleRecord,
 } from '@carwash/shared';
-import { getMeta, nextSequence } from '../../../core/db';
+import { logAudit } from '../../../core/audit';
+import { nextReceiptNo } from '../../../core/db';
 import { saveRecord } from '../../../core/sync';
+import { NO_PACKAGE, type PackageUse } from './package-use';
 
 export interface NewTicket {
   customer: CustomerRecord;
@@ -24,15 +26,15 @@ export interface NewTicket {
   /** The worker is washing another car, so this one waits. */
   workerBusy: boolean;
   notes: string;
+  packageUse?: PackageUse;
 }
 
 export async function createTicket(input: NewTicket): Promise<TicketRecord> {
-  const device = await getMeta('device');
-  if (!device) throw new Error('This laptop is not registered yet.');
   const now = Date.now();
-  const washTotal = input.lines.reduce((sum, line) => sum + line.price, 0);
+  const pkg = input.packageUse ?? NO_PACKAGE;
+  const washTotal = sumLines(input.lines) - pkg.packageDiscount;
   const row = {
-    receiptNo: receiptNumber(device.prefix, await nextSequence('receipt')),
+    receiptNo: await nextReceiptNo(),
     customerId: input.customer.id,
     vehicleId: input.vehicle.id,
     customerName: input.customer.name,
@@ -42,6 +44,7 @@ export async function createTicket(input: NewTicket): Promise<TicketRecord> {
     requestedWorker: input.requestedWorker,
     status: input.workerBusy ? 'waiting' : 'washing',
     lines: input.lines,
+    ...pkg,
     washTotal,
     total: washTotal,
     arrivedAt: now,
@@ -77,13 +80,12 @@ export async function cancelTicket(ticket: TicketRecord, reason: string, user: S
     cancelledAt: Date.now(),
     cancelReason: reason.trim(),
   });
-  await saveRecord('auditEvents', {
+  await logAudit({
     action: 'ticket.cancel',
-    userId: user.id,
-    userName: user.name,
+    user,
     targetId: ticket.id,
     summary: `${ticket.receiptNo} ${ticket.plate} (${formatSYP(ticket.total)})`,
-    reason: reason.trim(),
+    reason,
   });
   return cancelled;
 }

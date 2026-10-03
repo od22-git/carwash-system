@@ -13,7 +13,7 @@ export function TopBar({ user }: { user: SessionUser }) {
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-surface px-6 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-surface px-4 py-3 md:px-6">
       <ConnectionStatus />
       <div className="flex items-center gap-4 text-sm">
         <p>

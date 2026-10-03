@@ -1,4 +1,5 @@
 export * from './Button';
+export * from './CancelReceiptForm';
 export * from './Checkbox';
 export * from './CommitInput';
 export * from './Field';
@@ -6,3 +7,6 @@ export * from './Notice';
 export * from './PageHeader';
 export * from './Panel';
 export * from './PlateChip';
+export * from './RegisterPanel';
+export * from './Table';
+export * from './receipt';

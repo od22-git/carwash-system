@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import type { PullResponse, PushResponse, SyncOp } from '@carwash/shared';
 import type { AuthUser } from '../../common';
 import { groupChanges } from './group-changes';
+import { KEEP_SERVER_COPY } from './sync-entry';
 import { SyncRegistry } from './sync-registry';
 import { SyncRepository } from './sync.repository';
 
@@ -50,8 +51,9 @@ export class SyncService {
     if (!parsed.success) return 'invalid';
     if (entry.authorize) {
       const existing = await this.repo.findById(entry, String(parsed.data.id));
-      const reason = entry.authorize(parsed.data, user, existing);
-      if (reason) return reason;
+      const result = entry.authorize(parsed.data, user, existing);
+      if (result === KEEP_SERVER_COPY) return null;
+      if (result) return result;
     }
     await this.repo.upsert(entry, parsed.data);
     return null;

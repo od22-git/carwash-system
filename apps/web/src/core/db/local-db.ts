@@ -1,9 +1,13 @@
 import type {
   AuditEventRecord,
   CustomerRecord,
+  PackageRecord,
+  ParkingPlanRecord,
+  ParkingSessionRecord,
   ServicePriceRecord,
   ServiceRecord,
   SettingRecord,
+  SubscriptionRecord,
   SyncRecord,
   TicketRecord,
   VehicleRecord,
@@ -54,6 +58,10 @@ export class LocalDb extends Dexie {
   tickets!: EntityTable<TicketRecord, 'id'>;
   /** Pulled only on the admin's laptop. */
   auditEvents!: EntityTable<AuditEventRecord, 'id'>;
+  parkingPlans!: EntityTable<ParkingPlanRecord, 'id'>;
+  parkingSessions!: EntityTable<ParkingSessionRecord, 'id'>;
+  packages!: EntityTable<PackageRecord, 'id'>;
+  subscriptions!: EntityTable<SubscriptionRecord, 'id'>;
 
   constructor(name = 'carwash') {
     super(name);
@@ -73,6 +81,13 @@ export class LocalDb extends Dexie {
     this.version(3).stores({
       tickets: 'id, status, arrivedAt, customerId, workerId',
       auditEvents: 'id, createdAt',
+    });
+    this.version(4).stores({
+      tickets: 'id, status, arrivedAt, customerId, workerId, subscriptionId',
+      parkingPlans: 'id',
+      parkingSessions: 'id, status, enteredAt, vehicleId',
+      packages: 'id',
+      subscriptions: 'id, vehicleId, createdAt',
     });
   }
 }

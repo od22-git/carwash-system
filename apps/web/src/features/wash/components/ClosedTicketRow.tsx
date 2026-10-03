@@ -1,16 +1,16 @@
 import { formatSYP, TICKET_STATUS_LABELS, type TicketRecord } from '@carwash/shared';
 import { useState } from 'react';
 import { formatTime } from '../../../shared/lib/time-format';
-import { Button } from '../../../shared/ui';
+import { Button, CancelReceiptForm } from '../../../shared/ui';
 import { useWash } from '../hooks/wash-context';
-import { CancelTicketForm } from './board/CancelTicketForm';
+import { cancelTicket } from '../lib/ticket-actions';
 import { PrintReceiptButton } from './receipt/PrintReceiptButton';
 
 const COLUMNS = 7;
 
 /** One closed receipt. The admin can still cancel a delivered one (it is logged). */
 export function ClosedTicketRow({ ticket }: { ticket: TicketRecord }) {
-  const { workerName, isAdmin } = useWash();
+  const { workerName, isAdmin, user } = useWash();
   const [cancelling, setCancelling] = useState(false);
   const cancelled = ticket.status === 'cancelled';
 
@@ -41,7 +41,10 @@ export function ClosedTicketRow({ ticket }: { ticket: TicketRecord }) {
       {cancelling && (
         <tr>
           <td colSpan={COLUMNS} className="px-3 py-2">
-            <CancelTicketForm ticket={ticket} onDone={() => setCancelling(false)} />
+            <CancelReceiptForm
+              onConfirm={(reason) => cancelTicket(ticket, reason, user)}
+              onDone={() => setCancelling(false)}
+            />
           </td>
         </tr>
       )}
