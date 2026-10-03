@@ -1,5 +1,7 @@
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
-import { CASHIER, OWNER, expectAllSynced, localSetting, login, status } from './helpers';
+import { CASHIER, OWNER, expectAllSynced, login, status } from './support/helpers';
+import { localSetting } from './support/local-db';
+import { resetDatabase } from './support/reset-database';
 
 /** Two browser contexts = the admin laptop and the reception laptop. */
 test.describe.serial('milestone 1: setup, roles, offline work and sync', () => {
@@ -9,6 +11,7 @@ test.describe.serial('milestone 1: setup, roles, offline work and sync', () => {
   let reception: Page;
 
   test.beforeAll(async ({ browser }) => {
+    await resetDatabase();
     adminLaptop = await browser.newContext();
     receptionLaptop = await browser.newContext();
     admin = await adminLaptop.newPage();

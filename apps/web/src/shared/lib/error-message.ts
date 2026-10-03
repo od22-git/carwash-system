@@ -1,8 +1,12 @@
 import { ApiError, OfflineError } from '../../core/api';
 import { OfflineLoginError } from '../../core/auth';
+import { InvalidRecordError } from '../../core/sync';
 
 /** Turns any error into one sentence the cashier can act on. */
 export function errorMessage(error: unknown): string {
+  if (error instanceof InvalidRecordError) {
+    return 'بعض المعلومات غير صحيحة أو ناقصة، راجعها ثم احفظ مرة أخرى.';
+  }
   if (error instanceof OfflineLoginError) {
     return 'لا يوجد اتصال بالإنترنت، وهذا الحساب لم يسجّل دخوله على هذا الجهاز من قبل. سجّل الدخول مرة واحدة مع الإنترنت.';
   }

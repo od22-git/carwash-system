@@ -1,3 +1,4 @@
+export * from './invalid-record-error';
 export * from './run-sync';
 export * from './save-record';
 export * from './start-sync';

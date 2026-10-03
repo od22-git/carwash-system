@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@carwash/shared';
 import { db, setMeta } from '../db';
 
 export const DEVICE = { id: '11111111-1111-1111-1111-111111111111', name: 'test', prefix: 'A' };
@@ -24,3 +25,9 @@ export function fakeServer(handler: (path: string, body: unknown) => unknown) {
   }) as typeof fetch;
   return calls;
 }
+
+/** A valid garage setting draft for saveRecord('settings', ...). */
+export const garageDraft = (hourlyRate = 10_000) => ({
+  id: 'garage',
+  value: { ...SETTING_DEFAULTS.garage, hourlyRate },
+});

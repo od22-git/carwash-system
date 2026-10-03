@@ -1,4 +1,12 @@
-import type { SettingRecord, SyncRecord } from '@carwash/shared';
+import type {
+  CustomerRecord,
+  ServicePriceRecord,
+  ServiceRecord,
+  SettingRecord,
+  SyncRecord,
+  VehicleRecord,
+  WorkerPublic,
+} from '@carwash/shared';
 import Dexie, { type EntityTable } from 'dexie';
 
 /** Any synced row as stored on the laptop. */
@@ -27,13 +35,20 @@ export interface MetaEntry {
 
 /**
  * The laptop's own database. Screens read only from here, so the app works the same
- * with or without internet. Feature tables are added with a new version() line.
+ * with or without internet. New tables are added with a new version() block; old
+ * versions stay so existing laptops upgrade in place.
  */
 export class LocalDb extends Dexie {
   meta!: EntityTable<MetaEntry, 'key'>;
   outbox!: EntityTable<OutboxEntry, 'seq'>;
   syncErrors!: EntityTable<SyncErrorEntry, 'id'>;
   settings!: EntityTable<SettingRecord, 'id'>;
+  customers!: EntityTable<CustomerRecord, 'id'>;
+  vehicles!: EntityTable<VehicleRecord, 'id'>;
+  services!: EntityTable<ServiceRecord, 'id'>;
+  servicePrices!: EntityTable<ServicePriceRecord, 'id'>;
+  /** The cashier's laptop does not receive pay fields. */
+  workers!: EntityTable<WorkerPublic, 'id'>;
 
   constructor(name = 'carwash') {
     super(name);
@@ -42,6 +57,13 @@ export class LocalDb extends Dexie {
       outbox: '++seq, table, [table+rowId]',
       syncErrors: '++id',
       settings: 'id',
+    });
+    this.version(2).stores({
+      customers: 'id, phone, code',
+      vehicles: 'id, customerId, plate',
+      services: 'id',
+      servicePrices: 'id, serviceId',
+      workers: 'id',
     });
   }
 }

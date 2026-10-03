@@ -99,5 +99,18 @@ Every record has a UUID made on the laptop. Features write only through `saveRec
 The sync worker pushes the outbox to `POST /sync/push` (safe to repeat) and pulls
 changes from `GET /sync/pull?since=…`, filtered by role. Money and stock are append-only
 ledgers, so the two laptops never overwrite each other; editable records (customers,
-settings) use last-write-wins on `updatedAt`. A new synced table needs: a `syncColumns()`
-table + `SyncEntry` registered by its API module, and one line in `core/db/synced-tables.ts`.
+settings) use last-write-wins on `updatedAt`.
+
+### Adding a synced table (checklist)
+
+1. `packages/shared`: a zod record schema built on `syncRecordBase`.
+2. `apps/api/src/modules/<feature>/`: `<feature>.schema.ts` (table with `syncColumns()`),
+   `<feature>.sync.ts` (a `SyncEntry`: who may push / pull, optional `project` to hide fields
+   per role), and `providers: [registerSyncTables(entry)]` in the module. Export the table from
+   `database/schema.ts`, then `pnpm --filter @carwash/api db:generate --name <change>`.
+3. `apps/web/src/core/db/`: a new `version()` block in `local-db.ts`, one line in
+   `synced-tables.ts`, and the schema in `record-schemas.ts` (the laptop validates before saving).
+
+Synced tables have no foreign keys: laptops sync independently, so a row may arrive before the
+row it points to. Prefer fixed ids when two laptops may create "the same" row (prices use
+`<serviceId>:<size>`).

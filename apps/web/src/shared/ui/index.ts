@@ -1,5 +1,6 @@
 export * from './Button';
 export * from './Checkbox';
+export * from './CommitInput';
 export * from './Field';
 export * from './Notice';
 export * from './PageHeader';

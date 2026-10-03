@@ -12,6 +12,8 @@ export interface MetaMap {
   device: DeviceInfo;
   syncCursor: number;
   lastSyncAt: number;
+  /** Counters for numbers made on this laptop (customer codes, receipts). */
+  sequences: Record<string, number>;
 }
 
 export type MetaKey = keyof MetaMap;

@@ -3,7 +3,7 @@ import { db, getMeta } from '../db';
 import { runSync } from './run-sync';
 import { saveRecord } from './save-record';
 import { getSyncPhase } from './sync-state';
-import { fakeServer, freshLaptop } from './test-helpers';
+import { fakeServer, freshLaptop, garageDraft } from './test-helpers';
 
 const emptyPull = (cursor: number) => ({ changes: [], cursor, hasMore: false });
 
@@ -11,7 +11,7 @@ describe('runSync', () => {
   beforeEach(freshLaptop);
 
   it('pushes the outbox, empties it, then pulls and saves the cursor', async () => {
-    await saveRecord('settings', { id: 'garage', value: { hourlyRate: 5 } });
+    await saveRecord('settings', garageDraft(5));
     const calls = fakeServer((path) =>
       path === '/sync/push' ? { accepted: ['garage'], rejected: [] } : emptyPull(42),
     );
@@ -25,7 +25,7 @@ describe('runSync', () => {
   });
 
   it('keeps refused changes visible for the admin', async () => {
-    await saveRecord('settings', { id: 'garage', value: {} });
+    await saveRecord('settings', garageDraft());
     fakeServer((path) =>
       path === '/sync/push'
         ? { accepted: [], rejected: [{ table: 'settings', id: 'garage', reason: 'not_allowed' }] }
@@ -48,7 +48,7 @@ describe('runSync', () => {
   });
 
   it('marks the laptop offline when the server cannot be reached, and keeps the work', async () => {
-    await saveRecord('settings', { id: 'garage', value: {} });
+    await saveRecord('settings', garageDraft());
     globalThis.fetch = (() => Promise.reject(new TypeError('network'))) as typeof fetch;
     await runSync();
     expect(getSyncPhase()).toBe('offline');

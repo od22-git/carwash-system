@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { db } from '../db';
 import { applyChanges } from './apply-changes';
 import { saveRecord } from './save-record';
-import { freshLaptop } from './test-helpers';
+import { freshLaptop, garageDraft } from './test-helpers';
 
 const serverRow = (updatedAt: number, hourlyRate: number) => ({
   id: 'garage',
@@ -22,13 +22,13 @@ describe('applyChanges', () => {
   });
 
   it('keeps a newer change this laptop has not sent yet', async () => {
-    const local = await saveRecord('settings', { id: 'garage', value: { hourlyRate: 7 } });
+    const local = await saveRecord('settings', garageDraft(7));
     await applyChanges([{ table: 'settings', rows: [serverRow(local.updatedAt - 5, 1)] }]);
-    expect((await db.settings.get('garage'))?.value).toEqual({ hourlyRate: 7 });
+    expect((await db.settings.get('garage'))?.value).toMatchObject({ hourlyRate: 7 });
   });
 
   it('takes the server row when it is newer than the unsent local change', async () => {
-    const local = await saveRecord('settings', { id: 'garage', value: { hourlyRate: 7 } });
+    const local = await saveRecord('settings', garageDraft(7));
     await applyChanges([{ table: 'settings', rows: [serverRow(local.updatedAt + 5, 9)] }]);
     expect((await db.settings.get('garage'))?.value).toEqual({ hourlyRate: 9 });
   });
