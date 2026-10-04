@@ -9,7 +9,10 @@ interface WorkersTableProps {
 
 export function WorkersTable({ workers, onEdit }: WorkersTableProps) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-line bg-surface">
+    <section
+      aria-label="قائمة العمال"
+      className="overflow-x-auto rounded-xl border border-line bg-surface"
+    >
       <table className="w-full min-w-[36rem] border-collapse">
         <thead>
           <tr className="border-b border-line text-sm text-muted">
@@ -50,6 +53,6 @@ export function WorkersTable({ workers, onEdit }: WorkersTableProps) {
           ))}
         </tbody>
       </table>
-    </div>
+    </section>
   );
 }

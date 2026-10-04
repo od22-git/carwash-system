@@ -49,7 +49,8 @@ test.describe.serial('milestone 2: services, workers, customers and cars', () =>
     await admin.getByLabel('عمولة (نسبة من سعر الغسلة)').check();
     await admin.getByLabel('نسبة العمولة من سعر الغسلة (%)').fill('30');
     await admin.getByRole('button', { name: 'إضافة العامل' }).click();
-    await expect(admin.getByRole('cell', { name: 'عمولة 30% من سعر الغسلة' })).toBeVisible();
+    const list = admin.getByRole('region', { name: 'قائمة العمال' });
+    await expect(list.getByRole('cell', { name: 'عمولة 30% من سعر الغسلة' })).toBeVisible();
     await expectAllSynced(admin);
   });
 

@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { DevicesModule } from './modules/devices/devices.module';
+import { FinanceModule } from './modules/finance/finance.module';
 import { GarageModule } from './modules/garage/garage.module';
 import { HealthModule } from './modules/health/health.module';
 import { SettingsModule } from './modules/settings/settings.module';
@@ -33,6 +34,7 @@ import { WorkersModule } from './modules/workers/workers.module';
     GarageModule,
     SubscriptionsModule,
     StockModule,
+    FinanceModule,
     AuditModule,
     HealthModule,
   ],

@@ -6,12 +6,11 @@ import {
   toDateInput,
   toMonthInput,
 } from '../../../shared/lib/date-input';
-import { Button, PageHeader } from '../../../shared/ui';
+import { Button, PageHeader, PeriodSection } from '../../../shared/ui';
 import { LowStockNotice } from '../components/levels/LowStockNotice';
 import { StockTable } from '../components/levels/StockTable';
 import { MovementsList } from '../components/history/MovementsList';
 import { PeriodReport } from '../components/reports/PeriodReport';
-import { PeriodSection } from '../components/reports/PeriodSection';
 import { WASTE_DAY_COLUMNS, WASTE_MONTH_COLUMNS } from '../components/reports/report-columns';
 import { WasteSummary } from '../components/reports/WasteSummary';
 import { StockPanels, type StockPanel } from '../components/StockPanels';

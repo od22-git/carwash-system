@@ -1,12 +1,11 @@
 import { PRODUCT_KIND_LABELS, SELLABLE_KINDS, type SellableKind } from '@carwash/shared';
 import { useState } from 'react';
 import { monthRange, toMonthInput } from '../../../shared/lib/date-input';
-import { Button, ChoiceGroup, PageHeader } from '../../../shared/ui';
+import { Button, ChoiceGroup, PageHeader, PeriodSection } from '../../../shared/ui';
 import { MovementsList } from '../components/history/MovementsList';
 import { LowStockNotice } from '../components/levels/LowStockNotice';
 import { StockTable } from '../components/levels/StockTable';
 import { PeriodReport } from '../components/reports/PeriodReport';
-import { PeriodSection } from '../components/reports/PeriodSection';
 import { SALES_COLUMNS } from '../components/reports/report-columns';
 import { StockPanels, type StockPanel } from '../components/StockPanels';
 import { StockContext } from '../hooks/stock-context';

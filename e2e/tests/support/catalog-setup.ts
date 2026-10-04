@@ -22,7 +22,8 @@ async function addWorker(
   await admin.getByLabel(payLabel).check();
   await admin.getByLabel(rateLabel).fill(rate);
   await admin.getByRole('button', { name: 'إضافة العامل' }).click();
-  await expect(admin.getByRole('cell', { name, exact: true })).toBeVisible();
+  const list = admin.getByRole('region', { name: 'قائمة العمال' });
+  await expect(list.getByRole('cell', { name, exact: true })).toBeVisible();
 }
 
 /** The admin's first-day setup: the nine services, two prices for sedans, two workers. */

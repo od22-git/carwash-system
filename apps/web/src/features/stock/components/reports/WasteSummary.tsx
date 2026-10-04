@@ -1,4 +1,5 @@
 import { costPerCar, formatSYP, periodSummary } from '@carwash/shared';
+import { Stats } from '../../../../shared/ui';
 import { useCarsWashed } from '../../hooks/use-cars-washed';
 import { useStock } from '../../hooks/stock-context';
 
@@ -13,19 +14,12 @@ export function WasteSummary({ from, to }: { from: number; to: number }) {
   const perCar = costPerCar(cost, cars ?? 0);
 
   return (
-    <dl className="flex flex-wrap gap-x-10 gap-y-2 rounded-xl border border-line bg-surface px-5 py-4">
-      <Stat label="كلفة الهدر" value={formatSYP(cost)} />
-      <Stat label="السيارات المغسولة" value={cars === undefined ? '…' : String(cars)} />
-      <Stat label="كلفة الهدر لكل سيارة" value={perCar === null ? '—' : formatSYP(perCar)} />
-    </dl>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <dt className="text-sm text-muted">{label}</dt>
-      <dd className="font-display text-xl font-bold tabular-nums">{value}</dd>
-    </div>
+    <Stats
+      items={[
+        { label: 'كلفة الهدر', value: formatSYP(cost) },
+        { label: 'السيارات المغسولة', value: cars === undefined ? '…' : String(cars) },
+        { label: 'كلفة الهدر لكل سيارة', value: perCar === null ? '—' : formatSYP(perCar) },
+      ]}
+    />
   );
 }

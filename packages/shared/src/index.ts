@@ -3,6 +3,7 @@ export * from './catalog';
 export * from './common';
 export * from './contracts';
 export * from './customers';
+export * from './finance';
 export * from './garage';
 export * from './money';
 export * from './settings';

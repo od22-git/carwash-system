@@ -6,6 +6,7 @@ export * from '../modules/audit/audit.schema';
 export * from '../modules/catalog/catalog.schema';
 export * from '../modules/customers/customers.schema';
 export * from '../modules/devices/devices.schema';
+export * from '../modules/finance/finance.schema';
 export * from '../modules/garage/garage.schema';
 export * from '../modules/settings/settings.schema';
 export * from '../modules/stock/stock.schema';

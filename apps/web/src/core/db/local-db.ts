@@ -1,6 +1,8 @@
 import type {
   AuditEventRecord,
+  BudgetRecord,
   CustomerRecord,
+  ExpenseRecord,
   PackageRecord,
   ProductRecord,
   ParkingPlanRecord,
@@ -72,6 +74,9 @@ export class LocalDb extends Dexie {
   sales!: EntityTable<SaleRecord, 'id'>;
   /** Advances and wages: admin's laptop only. */
   workerPayments!: EntityTable<WorkerPaymentRecord, 'id'>;
+  /** Running costs and monthly budgets: admin's laptop only. */
+  expenses!: EntityTable<ExpenseRecord, 'id'>;
+  budgets!: EntityTable<BudgetRecord, 'id'>;
 
   constructor(name = 'carwash') {
     super(name);
@@ -106,6 +111,13 @@ export class LocalDb extends Dexie {
     });
     this.version(6).stores({
       workerPayments: 'id, workerId, at',
+    });
+    this.version(7).stores({
+      // Income is counted when a car is delivered / leaves the garage.
+      tickets: 'id, status, arrivedAt, deliveredAt, customerId, workerId, subscriptionId',
+      parkingSessions: 'id, status, enteredAt, leftAt, vehicleId',
+      expenses: 'id, at',
+      budgets: 'id, month',
     });
   }
 }

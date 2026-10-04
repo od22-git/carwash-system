@@ -4,6 +4,7 @@ import { RequireAuth, RequireRole } from '../core/auth';
 import { LoginPage, SetupPage } from '../features/auth';
 import { ServicesPage } from '../features/catalog';
 import { CustomersPage } from '../features/customers';
+import { FinancePage } from '../features/finance';
 import { GaragePage, PackagesPage } from '../features/garage';
 import { SalesPage } from '../features/sales';
 import { SettingsPage } from '../features/settings';
@@ -24,6 +25,7 @@ const PAGES: Record<string, ReactNode> = {
   '/packages': <PackagesPage />,
   '/customers': <CustomersPage />,
   '/workers': <WorkersPage />,
+  '/finance': <FinancePage />,
   '/services': <ServicesPage />,
   '/settings': <SettingsPage />,
 };
