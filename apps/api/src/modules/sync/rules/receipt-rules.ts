@@ -27,12 +27,13 @@ export const appendOnly: Authorize = (incoming, _user, existing) => {
 };
 
 /**
- * A receipt either laptop may write once (e.g. a debt payment): after that only the admin
- * changes or deletes it. Re-sending the same version is accepted and changes nothing.
+ * A record either laptop may write once (a debt payment, the day's cash close): after that
+ * only the admin changes or deletes it. Once the admin deleted it (e.g. reopened the day),
+ * it may be written again. Re-sending the same version is accepted and changes nothing.
  */
 export const cashierCreatesOnly: Authorize = (incoming, user, existing) => {
   if (isNotNewer(incoming, existing)) return KEEP_SERVER_COPY;
   if (user.role === 'admin') return null;
   if (incoming.deletedAt != null) return 'admin_only';
-  return existing ? 'locked' : null;
+  return existing && existing.deletedAt == null ? 'locked' : null;
 };

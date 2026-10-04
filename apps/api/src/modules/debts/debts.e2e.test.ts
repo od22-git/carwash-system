@@ -43,8 +43,8 @@ describe('debt payments: the cashier records, only the admin corrects', () => {
 
     expect((await cashier.push([payment(cashierDevice)])).body.rejected).toEqual([]);
     const pulled = await admin.pull(0);
-    const rows = pulled.body.changes.filter((c: { table: string }) => c.table === 'debtPayments');
-    expect(rows).toHaveLength(1);
+    const group = pulled.body.changes.find((c: { table: string }) => c.table === 'debtPayments');
+    expect(group.rows).toHaveLength(1);
 
     const edit = await cashier.push([payment(cashierDevice, { amount: 5000, updatedAt: 2 })]);
     expect(edit.body.rejected[0].reason).toBe('locked');

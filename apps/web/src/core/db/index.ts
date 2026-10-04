@@ -1,3 +1,4 @@
+export * from './in-range';
 export * from './local-db';
 export * from './meta';
 export * from './sequence';

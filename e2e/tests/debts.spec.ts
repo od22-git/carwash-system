@@ -1,18 +1,12 @@
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 import { SERVICES, setUpCatalog } from './support/catalog-setup';
+import { account, openCustomer, payDebt } from './support/customers';
 import { CASHIER, createCashier, expectAllSynced, login, nav, setupOwner } from './support/helpers';
 import { resetDatabase } from './support/reset-database';
 import { card, registerWash } from './support/wash';
 
 const PLATE = 'حلب 21';
 const delivered = (page: Page) => page.getByRole('region', { name: 'سُلّمت اليوم' });
-const account = (page: Page) => page.getByRole('region', { name: 'الحساب الآجل' });
-
-async function openCustomer(page: Page, name: string) {
-  await nav(page).getByRole('link', { name: 'العملاء' }).click();
-  await page.getByRole('button', { name: new RegExp(name) }).click();
-  await expect(page.getByRole('heading', { name })).toBeVisible();
-}
 
 test.describe.serial('milestone 6: customer debts (آجل)', () => {
   let adminLaptop: BrowserContext;
@@ -59,9 +53,7 @@ test.describe.serial('milestone 6: customer debts (آجل)', () => {
     await expect(account(reception)).toContainText('المستحق 45,000 ل.س');
     await expect(account(reception).getByLabel('المبلغ المدفوع (ل.س)')).toHaveValue('45,000');
 
-    await account(reception).getByLabel('المبلغ المدفوع (ل.س)').fill('20000');
-    await account(reception).getByRole('button', { name: 'تسجيل الدفعة' }).click();
-    await expect(account(reception)).toContainText('سُجّلت الدفعة، الإيصال');
+    await payDebt(reception, '20000');
     await expect(account(reception)).toContainText('المستحق 25,000 ل.س');
     await expect(account(reception).getByLabel('المبلغ المدفوع (ل.س)')).toHaveValue('25,000');
 

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router';
 import { RequireAuth, RequireRole } from '../core/auth';
 import { LoginPage, SetupPage } from '../features/auth';
+import { CashPage } from '../features/cash';
 import { ServicesPage } from '../features/catalog';
 import { CustomersPage } from '../features/customers';
 import { FinancePage } from '../features/finance';
@@ -24,6 +25,7 @@ const PAGES: Record<string, ReactNode> = {
   '/waste': <WastePage />,
   '/packages': <PackagesPage />,
   '/customers': <CustomersPage />,
+  '/cash': <CashPage />,
   '/workers': <WorkersPage />,
   '/finance': <FinancePage />,
   '/services': <ServicesPage />,

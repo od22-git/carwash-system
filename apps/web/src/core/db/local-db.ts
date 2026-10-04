@@ -1,4 +1,5 @@
 import type {
+  CashCloseRecord,
   AuditEventRecord,
   BudgetRecord,
   CustomerRecord,
@@ -79,6 +80,8 @@ export class LocalDb extends Dexie {
   expenses!: EntityTable<ExpenseRecord, 'id'>;
   budgets!: EntityTable<BudgetRecord, 'id'>;
   debtPayments!: EntityTable<DebtPaymentRecord, 'id'>;
+  /** One per day; the id is the day. */
+  cashCloses!: EntityTable<CashCloseRecord, 'id'>;
 
   constructor(name = 'carwash') {
     super(name);
@@ -124,6 +127,9 @@ export class LocalDb extends Dexie {
     this.version(8).stores({
       parkingSessions: 'id, status, enteredAt, leftAt, vehicleId, customerId',
       debtPayments: 'id, customerId, at',
+    });
+    this.version(9).stores({
+      cashCloses: 'id, day',
     });
   }
 }

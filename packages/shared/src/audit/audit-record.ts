@@ -10,6 +10,7 @@ export const AUDIT_ACTIONS = [
   'worker-payment.delete',
   'expense.delete',
   'debt-payment.delete',
+  'cash-close.reopen',
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
@@ -22,6 +23,7 @@ export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {
   'worker-payment.delete': 'حذف دفعة عامل',
   'expense.delete': 'حذف مصروف',
   'debt-payment.delete': 'حذف دفعة دين',
+  'cash-close.reopen': 'إعادة فتح الصندوق',
 };
 
 /**

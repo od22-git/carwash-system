@@ -14,6 +14,7 @@ export const NAV_ITEMS: NavItem[] = [
   { path: '/garage', label: 'الكراج', roles: ['user', 'admin'] },
   { path: '/sales', label: 'البيع والبوفيه', roles: ['user', 'admin'] },
   { path: '/customers', label: 'العملاء', roles: ['user', 'admin'] },
+  { path: '/cash', label: 'إغلاق الصندوق', roles: ['user', 'admin'] },
   { path: '/stock', label: 'المخزون والبوفيه', roles: ['admin'], stockAlert: ['stock', 'buffet'] },
   { path: '/waste', label: 'مواد الهدر', roles: ['admin'], stockAlert: ['consumable'] },
   { path: '/workers', label: 'العمال', roles: ['admin'] },

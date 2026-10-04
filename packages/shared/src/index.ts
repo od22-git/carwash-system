@@ -1,4 +1,5 @@
 export * from './audit';
+export * from './cash';
 export * from './catalog';
 export * from './common';
 export * from './contracts';

@@ -49,4 +49,8 @@ describe('cashierCreatesOnly', () => {
     expect(cashierCreatesOnly(row('x', 2, 2), cashier, row('x', 1))).toBe('admin_only');
     expect(cashierCreatesOnly(row('x', 2, 2), admin, row('x', 1))).toBeNull();
   });
+
+  it('after the admin deleted it, it can be written again', () => {
+    expect(cashierCreatesOnly(row('x', 3), cashier, row('x', 2, 2))).toBeNull();
+  });
 });

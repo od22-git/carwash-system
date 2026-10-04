@@ -41,6 +41,7 @@ src/
                  (evening waste), period summaries, sale lines (piece / carton prices)
   finance/       expenses, monthly budgets, revenue by source, spending by budget line
   debts/         payments on account; receipts taken on credit (paidLater) and balances
+  cash/          the day's cash in (paid now + debts paid), the daily close and its difference
   customers/     syrian-phone, arabic-name, duplicates, plate
   whatsapp/      template, link
   audit/         audit events (cancellations, deletions)
@@ -114,7 +115,8 @@ Reused building blocks:
 - `shared/ui`: `PeriodPicker` (day / week from Saturday / month), `PeriodSection`, `Stats`.
 - `debts`: `PayLaterToggle` next to a deliver button, `PaidLaterTag` next to an amount,
   `DebtPanel` (the customer's account) and `DebtorsTable` (who owes, on the finance page).
-- `core/db`: `nextReceiptNo()` — one receipt series per laptop for wash, garage and packages.
+- `core/db`: `nextReceiptNo()` — one receipt series per laptop for wash, garage and packages;
+  `inRange(table, index, [from, to])` for reports.
 - `core/audit`: `logAudit()` for sensitive actions.
 
 ## Offline sync in one paragraph

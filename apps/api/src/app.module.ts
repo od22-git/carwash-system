@@ -3,6 +3,7 @@ import { ConfigModule } from './config';
 import { DatabaseModule } from './database';
 import { AuditModule } from './modules/audit/audit.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CashModule } from './modules/cash/cash.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { DebtsModule } from './modules/debts/debts.module';
@@ -37,6 +38,7 @@ import { WorkersModule } from './modules/workers/workers.module';
     StockModule,
     FinanceModule,
     DebtsModule,
+    CashModule,
     AuditModule,
     HealthModule,
   ],

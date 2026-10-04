@@ -3,6 +3,7 @@
  * This file only gathers them for Drizzle and for migrations.
  */
 export * from '../modules/audit/audit.schema';
+export * from '../modules/cash/cash.schema';
 export * from '../modules/catalog/catalog.schema';
 export * from '../modules/customers/customers.schema';
 export * from '../modules/debts/debts.schema';
