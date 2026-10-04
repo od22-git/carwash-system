@@ -15,7 +15,12 @@ export default defineConfig({
   reporter: process.env.CI ? [['github'], ['list']] : [['list']],
   timeout: 60_000,
   expect: { timeout: 10_000 },
-  use: { baseURL: 'http://localhost:4173', locale: 'ar' },
+  use: {
+    baseURL: 'http://localhost:4173',
+    locale: 'ar',
+    // Arabic download names (Excel exports) need a UTF-8 locale on Linux.
+    launchOptions: { env: { ...process.env, LANG: 'C.UTF-8' } },
+  },
   webServer: [
     {
       command: 'node ../apps/api/dist/main.js',

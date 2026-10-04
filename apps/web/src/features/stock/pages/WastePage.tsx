@@ -6,12 +6,13 @@ import {
   toDateInput,
   toMonthInput,
 } from '../../../shared/lib/date-input';
+import { formatDate, formatMonth } from '../../../shared/lib/time-format';
 import { Button, PageHeader, PeriodSection } from '../../../shared/ui';
 import { LowStockNotice } from '../components/levels/LowStockNotice';
 import { StockTable } from '../components/levels/StockTable';
 import { MovementsList } from '../components/history/MovementsList';
 import { PeriodReport } from '../components/reports/PeriodReport';
-import { WASTE_DAY_COLUMNS, WASTE_MONTH_COLUMNS } from '../components/reports/report-columns';
+import { WASTE_DAY_COLUMNS, WASTE_MONTH_COLUMNS } from '../lib/report-columns';
 import { WasteSummary } from '../components/reports/WasteSummary';
 import { StockPanels, type StockPanel } from '../components/StockPanels';
 import { StockContext } from '../hooks/stock-context';
@@ -68,11 +69,23 @@ export function WastePage() {
         )}
         <PeriodSection title="هدر اليوم" type="date" value={day} onChange={setDay}>
           <WasteSummary from={dayFrom} to={dayTo} />
-          <PeriodReport columns={WASTE_DAY_COLUMNS} from={dayFrom} to={dayTo} />
+          <PeriodReport
+            fileName={`الهدر ${day}`}
+            title={`الهدر: ${formatDate(dayFrom)}`}
+            columns={WASTE_DAY_COLUMNS}
+            from={dayFrom}
+            to={dayTo}
+          />
         </PeriodSection>
         <PeriodSection title="التقرير الشهري" type="month" value={month} onChange={setMonth}>
           <WasteSummary from={monthFrom} to={monthTo} />
-          <PeriodReport columns={WASTE_MONTH_COLUMNS} from={monthFrom} to={monthTo} />
+          <PeriodReport
+            fileName={`الهدر ${month}`}
+            title={`الهدر: ${formatMonth(month)}`}
+            columns={WASTE_MONTH_COLUMNS}
+            from={monthFrom}
+            to={monthTo}
+          />
           <h3 className="font-semibold">حركات الشهر</h3>
           <MovementsList from={monthFrom} to={monthTo} />
         </PeriodSection>

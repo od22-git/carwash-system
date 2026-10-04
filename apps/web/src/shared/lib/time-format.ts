@@ -12,6 +12,28 @@ export function formatDate(ms: number): string {
   return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 }
 
+/** Month names as used in Syria. */
+const MONTHS = [
+  'كانون الثاني',
+  'شباط',
+  'آذار',
+  'نيسان',
+  'أيار',
+  'حزيران',
+  'تموز',
+  'آب',
+  'أيلول',
+  'تشرين الأول',
+  'تشرين الثاني',
+  'كانون الأول',
+];
+
+/** "2026-10" -> "تشرين الأول 2026" (for report titles). */
+export function formatMonth(month: string): string {
+  const [year, m] = month.split('-').map(Number);
+  return `${MONTHS[(m ?? 1) - 1]} ${year}`;
+}
+
 /** 9:41 for a countdown (minutes:seconds). */
 export function formatCountdown(ms: number): string {
   const total = Math.max(0, Math.ceil(ms / 1000));

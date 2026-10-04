@@ -1,6 +1,7 @@
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 import { SERVICES, setUpCatalog } from './support/catalog-setup';
 import { CASHIER, createCashier, expectAllSynced, login, nav, setupOwner } from './support/helpers';
+import { exportExcel, rowStarting, rowValues } from './support/excel';
 import { resetDatabase } from './support/reset-database';
 import { card, registerWash } from './support/wash';
 
@@ -88,6 +89,28 @@ test.describe.serial('milestone 6: workers’ pay and the month’s finance', ()
     await expect(admin.getByRole('row', { name: /^أجور العمال/ })).toContainText(
       'تجاوز 35,000 ل.س',
     );
+  });
+
+  test('the month and the pay table are exported to Excel (right-to-left)', async () => {
+    const finance = await exportExcel(admin, month(admin));
+    expect(finance.name).toMatch(/^الحسابات \d{4}-\d{2}\.xlsx$/);
+    expect(finance.book.getWorksheet('الملخص')?.views[0]).toMatchObject({ rightToLeft: true });
+    expect(rowValues(finance.book, 'الملخص', 6)).toEqual(['الصافي', -145000]);
+    expect(rowValues(finance.book, 'الدخل', 4)).toEqual(['الغسيل', 90000]);
+
+    await admin.goto('/workers');
+    const pay = await exportExcel(admin, payroll(admin));
+    expect(pay.name).toMatch(/^الأجور \d{4}-\d{2}\.xlsx$/);
+    expect(rowStarting(pay.book, 'الأجور', 'محمد')).toEqual([
+      'محمد',
+      'عمولة 30% من سعر الغسلة',
+      2,
+      70000,
+      21000,
+      10000,
+      11000,
+    ]);
+    await nav(admin).getByRole('link', { name: 'الحسابات والتقارير' }).click();
   });
 
   test('deleting an expense is logged for the owner', async () => {

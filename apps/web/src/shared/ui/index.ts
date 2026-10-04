@@ -3,6 +3,7 @@ export * from './CancelReceiptForm';
 export * from './Checkbox';
 export * from './ChoiceGroup';
 export * from './CommitInput';
+export * from './ExportButton';
 export * from './Field';
 export * from './Notice';
 export * from './PageHeader';

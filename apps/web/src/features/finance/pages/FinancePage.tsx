@@ -1,20 +1,29 @@
 import { formatSYP, totalOf } from '@carwash/shared';
 import { useState } from 'react';
 import { toMonthInput } from '../../../shared/lib/date-input';
-import { Button, PageHeader, PeriodSection, RegisterPanel, Stats } from '../../../shared/ui';
-import { DebtorsTable } from '../../debts';
+import {
+  Button,
+  ExportButton,
+  PageHeader,
+  PeriodSection,
+  RegisterPanel,
+  Stats,
+} from '../../../shared/ui';
+import { DebtorsTable, useDebtors } from '../../debts';
 import { AuditLog } from '../components/AuditLog';
 import { BudgetTable } from '../components/BudgetTable';
 import { ExpenseForm } from '../components/ExpenseForm';
 import { ExpensesList } from '../components/ExpensesList';
 import { RevenueTable } from '../components/RevenueTable';
 import { useMonthFinance } from '../hooks/use-month-finance';
+import { financeSheets } from '../lib/finance-sheets';
 
 /** The owner's month: income by source, spending against budget, the net, and the log. */
 export function FinancePage() {
   const [month, setMonth] = useState(() => toMonthInput(Date.now()));
   const [adding, setAdding] = useState(false);
   const finance = useMonthFinance(month);
+  const debtors = useDebtors();
   const income = finance ? totalOf(finance.revenue) : 0;
   const spent = finance ? totalOf(finance.expenses) : 0;
 
@@ -29,7 +38,20 @@ export function FinancePage() {
           <ExpenseForm onDone={() => setAdding(false)} />
         </RegisterPanel>
       )}
-      <PeriodSection title="حساب الشهر" type="month" value={month} onChange={setMonth}>
+      <PeriodSection
+        title="حساب الشهر"
+        type="month"
+        value={month}
+        onChange={setMonth}
+        actions={
+          finance && (
+            <ExportButton
+              fileName={`الحسابات ${month}`}
+              sheets={() => financeSheets(month, finance, debtors ?? [])}
+            />
+          )
+        }
+      >
         {finance && (
           <>
             <Stats

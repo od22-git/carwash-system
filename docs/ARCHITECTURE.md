@@ -112,7 +112,13 @@ Reused building blocks:
 - `shared/lib`: `UserError` (a message shown to the user as it is), `date-input` (day and month
   pickers, `dayRange` / `monthRange` for reports), `parseWholeNumber`.
 - `stock`: `StockContext` shared by the stock and waste screens; `useLowStockCount` for the menu.
-- `shared/ui`: `PeriodPicker` (day / week from Saturday / month), `PeriodSection`, `Stats`.
+- `shared/ui`: `PeriodPicker` (day / week from Saturday / month), `PeriodSection` (with an
+  `actions` slot), `Stats`, `ExportButton`.
+- `shared/lib/excel`: `downloadExcel(fileName, sheets)` — right-to-left workbooks from plain
+  `SheetSpec`s (title, columns, rows, totals); exceljs is loaded only when exporting. Each
+  report builds its sheets in its feature's `lib/*-sheets.ts` (pure, unit-tested).
+- `shared/lib`: `periodLabel` (file names) and `periodTitle` / `formatMonth` (titles, Syrian
+  month names; dates in titles use slashes so Arabic text does not flip them).
 - `debts`: `PayLaterToggle` next to a deliver button, `PaidLaterTag` next to an amount,
   `DebtPanel` (the customer's account) and `DebtorsTable` (who owes, on the finance page).
 - `core/db`: `nextReceiptNo()` — one receipt series per laptop for wash, garage and packages;

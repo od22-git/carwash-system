@@ -1,12 +1,13 @@
 import { PRODUCT_KIND_LABELS, SELLABLE_KINDS, type SellableKind } from '@carwash/shared';
 import { useState } from 'react';
 import { monthRange, toMonthInput } from '../../../shared/lib/date-input';
+import { formatMonth } from '../../../shared/lib/time-format';
 import { Button, ChoiceGroup, PageHeader, PeriodSection } from '../../../shared/ui';
 import { MovementsList } from '../components/history/MovementsList';
 import { LowStockNotice } from '../components/levels/LowStockNotice';
 import { StockTable } from '../components/levels/StockTable';
 import { PeriodReport } from '../components/reports/PeriodReport';
-import { SALES_COLUMNS } from '../components/reports/report-columns';
+import { SALES_COLUMNS } from '../lib/report-columns';
 import { StockPanels, type StockPanel } from '../components/StockPanels';
 import { StockContext } from '../hooks/stock-context';
 import { useStockContextValue } from '../hooks/use-stock-context-value';
@@ -75,7 +76,13 @@ export function StockPage() {
           />
         )}
         <PeriodSection title="التقرير الشهري" type="month" value={month} onChange={setMonth}>
-          <PeriodReport columns={SALES_COLUMNS} from={from} to={to} />
+          <PeriodReport
+            fileName={`المخزون والبوفيه ${month}`}
+            title={`المخزون والبوفيه: ${formatMonth(month)}`}
+            columns={SALES_COLUMNS}
+            from={from}
+            to={to}
+          />
           <h3 className="font-semibold">حركات الشهر</h3>
           <MovementsList from={from} to={to} />
         </PeriodSection>

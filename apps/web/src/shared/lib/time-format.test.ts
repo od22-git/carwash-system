@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatCountdown, formatDuration, startOfDay } from './time-format';
+import { formatCountdown, formatDuration, formatMonth, startOfDay } from './time-format';
 
 describe('time formatting', () => {
   it('counts down in minutes and seconds', () => {
@@ -16,5 +16,12 @@ describe('time formatting', () => {
   it('finds local midnight', () => {
     const noon = new Date(2026, 9, 4, 12, 30).getTime();
     expect(startOfDay(noon)).toBe(new Date(2026, 9, 4).getTime());
+  });
+});
+
+describe('formatMonth', () => {
+  it('uses the Syrian month names', () => {
+    expect(formatMonth('2026-10')).toBe('تشرين الأول 2026');
+    expect(formatMonth('2027-01')).toBe('كانون الثاني 2027');
   });
 });

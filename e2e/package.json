@@ -9,6 +9,7 @@
     "@playwright/test": "1.56.0",
     "@types/node": "^22.10.5",
     "@types/pg": "^8.11.10",
+    "exceljs": "^4.4.0",
     "pg": "^8.13.1",
     "typescript": "^5.7.2"
   }

@@ -1,8 +1,15 @@
 import { useState } from 'react';
-import { periodRange, todayPeriod, type Period } from '../../../../shared/lib/period';
-import { PeriodPicker, RegisterPanel } from '../../../../shared/ui';
+import {
+  periodLabel,
+  periodRange,
+  periodTitle,
+  todayPeriod,
+  type Period,
+} from '../../../../shared/lib/period';
+import { ExportButton, PeriodPicker, RegisterPanel } from '../../../../shared/ui';
 import { usePayroll } from '../../hooks/use-payroll';
 import type { PayrollRow } from '../../lib/payroll';
+import { payrollSheets } from '../../lib/payroll-sheets';
 import { PaymentForm } from './PaymentForm';
 import { PaymentsList } from './PaymentsList';
 import { PayrollTable } from './PayrollTable';
@@ -22,7 +29,15 @@ export function PayrollSection() {
     <section aria-label="الأجور" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="font-display text-lg font-bold">الأجور</h2>
-        <PeriodPicker value={period} onChange={setPeriod} />
+        <div className="flex flex-wrap items-end gap-3">
+          <PeriodPicker value={period} onChange={setPeriod} />
+          {payroll && (
+            <ExportButton
+              fileName={`الأجور ${periodLabel(period)}`}
+              sheets={() => payrollSheets(periodTitle(period), payroll.rows, payroll.payments)}
+            />
+          )}
+        </div>
       </div>
       {paying && (
         <RegisterPanel title="دفعة لعامل" onClose={() => setPaying(null)}>
