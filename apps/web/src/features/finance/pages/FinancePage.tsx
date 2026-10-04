@@ -2,6 +2,7 @@ import { formatSYP, totalOf } from '@carwash/shared';
 import { useState } from 'react';
 import { toMonthInput } from '../../../shared/lib/date-input';
 import { Button, PageHeader, PeriodSection, RegisterPanel, Stats } from '../../../shared/ui';
+import { DebtorsTable } from '../../debts';
 import { AuditLog } from '../components/AuditLog';
 import { BudgetTable } from '../components/BudgetTable';
 import { ExpenseForm } from '../components/ExpenseForm';
@@ -57,6 +58,10 @@ export function FinancePage() {
           </>
         )}
       </PeriodSection>
+      <section aria-label="ديون العملاء" className="flex flex-col gap-3">
+        <h2 className="font-display text-lg font-bold">ديون العملاء (آجل)</h2>
+        <DebtorsTable />
+      </section>
       <section aria-label="سجل العمليات الحساسة" className="flex flex-col gap-3">
         <h2 className="font-display text-lg font-bold">سجل العمليات الحساسة</h2>
         <AuditLog />

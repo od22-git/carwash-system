@@ -2,6 +2,7 @@ import type {
   AuditEventRecord,
   BudgetRecord,
   CustomerRecord,
+  DebtPaymentRecord,
   ExpenseRecord,
   PackageRecord,
   ProductRecord,
@@ -77,6 +78,7 @@ export class LocalDb extends Dexie {
   /** Running costs and monthly budgets: admin's laptop only. */
   expenses!: EntityTable<ExpenseRecord, 'id'>;
   budgets!: EntityTable<BudgetRecord, 'id'>;
+  debtPayments!: EntityTable<DebtPaymentRecord, 'id'>;
 
   constructor(name = 'carwash') {
     super(name);
@@ -118,6 +120,10 @@ export class LocalDb extends Dexie {
       parkingSessions: 'id, status, enteredAt, leftAt, vehicleId',
       expenses: 'id, at',
       budgets: 'id, month',
+    });
+    this.version(8).stores({
+      parkingSessions: 'id, status, enteredAt, leftAt, vehicleId, customerId',
+      debtPayments: 'id, customerId, at',
     });
   }
 }

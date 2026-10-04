@@ -28,6 +28,7 @@ export const tickets = pgTable(
     startedAt: epochMs('started_at'),
     notifiedAt: epochMs('notified_at'),
     deliveredAt: epochMs('delivered_at'),
+    paidLater: boolean('paid_later').notNull().default(false),
     cancelledAt: epochMs('cancelled_at'),
     cancelReason: text('cancel_reason').notNull().default(''),
     notes: text('notes').notNull().default(''),

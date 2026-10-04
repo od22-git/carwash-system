@@ -68,10 +68,14 @@ export const startWashing = (ticket: TicketRecord) =>
 export const markNotified = (ticket: TicketRecord) =>
   move(ticket, 'grace', { notifiedAt: Date.now() });
 
-/** The car leaves: the garage fee (if late) is added to the total. */
-export function deliver(ticket: TicketRecord, settings: GarageSettings) {
+/**
+ * The car leaves: the garage fee (if late) is added to the total. `paidLater` puts the
+ * total on the customer's account (آجل) instead of taking it now.
+ */
+export function deliver(ticket: TicketRecord, settings: GarageSettings, paidLater = false) {
   const now = Date.now();
-  return move(ticket, 'delivered', { deliveredAt: now, ...deliveryTotals(ticket, now, settings) });
+  const totals = deliveryTotals(ticket, now, settings);
+  return move(ticket, 'delivered', { deliveredAt: now, ...totals, paidLater });
 }
 
 /** Admin only. The receipt stays (marked cancelled) and the action is logged. */

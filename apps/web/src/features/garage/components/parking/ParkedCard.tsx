@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { formatDate, formatDuration, formatWhen } from '../../../../shared/lib/time-format';
 import { useAction } from '../../../../shared/lib/use-action';
 import { Button, CancelReceiptForm, Notice, PlateChip } from '../../../../shared/ui';
+import { PayLaterToggle } from '../../../debts';
 import { useGarage } from '../../hooks/garage-context';
 import { planLabel } from '../../lib/describe';
 import { cancelParking, releaseCar } from '../../lib/parking-actions';
@@ -12,6 +13,7 @@ import { PrintParkingButton } from '../receipts/PrintButtons';
 export function ParkedCard({ session, now }: { session: ParkingSessionRecord; now: number }) {
   const { garage, isAdmin, user } = useGarage();
   const [cancelling, setCancelling] = useState(false);
+  const [paidLater, setPaidLater] = useState(false);
   const action = useAction();
   const fee = parkingCharge(session, now, garage).fee;
 
@@ -38,10 +40,11 @@ export function ParkedCard({ session, now }: { session: ParkingSessionRecord; no
       <div className="flex flex-wrap items-center gap-2">
         <Button
           disabled={action.busy}
-          onClick={() => void action.run(() => releaseCar(session, garage))}
+          onClick={() => void action.run(() => releaseCar(session, garage, paidLater))}
         >
           خروج السيارة ({formatSYP(fee)})
         </Button>
+        {fee > 0 && <PayLaterToggle checked={paidLater} onChange={setPaidLater} />}
         <PrintParkingButton session={session} />
         {isAdmin && !cancelling && (
           <Button variant="quiet" onClick={() => setCancelling(true)}>

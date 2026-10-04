@@ -91,6 +91,13 @@ describe('wash tickets', () => {
     });
   });
 
+  it('a car delivered on the customer account is marked paid later', async () => {
+    const ticket = await markNotified(await newTicket());
+    expect((await deliver(ticket, DEFAULT_GARAGE_SETTINGS)).paidLater).toBe(false);
+    const onAccount = await deliver(ticket, DEFAULT_GARAGE_SETTINGS, true);
+    expect(onAccount).toMatchObject({ status: 'delivered', paidLater: true, total: 50_000 });
+  });
+
   it('a free wash from the package takes the covered services off the bill', async () => {
     const lines = priceWash(['s1', 's2'], 'suv', services, matrix).lines;
     const subscription = {

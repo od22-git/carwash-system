@@ -26,7 +26,7 @@ export function CustomersPage() {
         title="العملاء"
         actions={<Button onClick={() => setView({ kind: 'new' })}>عميل جديد</Button>}
       />
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
         <section className="flex flex-col gap-4">
           <Field
             label="بحث بالاسم أو الهاتف أو اللوحة أو رقم العميل"

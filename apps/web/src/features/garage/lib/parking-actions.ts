@@ -67,11 +67,18 @@ async function move(
   return (await saveRecord('parkingSessions', row)) as ParkingSessionRecord;
 }
 
-/** The car leaves and pays its plan (less what its package covers). */
-export function releaseCar(session: ParkingSessionRecord, settings: GarageSettings) {
+/**
+ * The car leaves and pays its plan (less what its package covers), now or on the
+ * customer's account (`paidLater`, آجل).
+ */
+export function releaseCar(
+  session: ParkingSessionRecord,
+  settings: GarageSettings,
+  paidLater = false,
+) {
   const now = Date.now();
   const { fee, billedHours } = parkingCharge(session, now, settings);
-  return move(session, 'left', { leftAt: now, fee, billedHours });
+  return move(session, 'left', { leftAt: now, fee, billedHours, paidLater });
 }
 
 /** Admin only. The receipt stays (marked cancelled) and the action is logged. */

@@ -19,6 +19,7 @@ export function TicketReceipt({ ticket, shopName, footer, workerName }: TicketRe
       atLabel="وقت الدخول"
       plate={ticket.plate}
       cancelled={ticket.status === 'cancelled'}
+      paidLater={ticket.paidLater}
       total={formatSYP(ticket.total)}
     >
       <ReceiptRow label="العميل" value={ticket.customerName} />

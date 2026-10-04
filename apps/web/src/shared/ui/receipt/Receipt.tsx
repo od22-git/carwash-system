@@ -12,6 +12,8 @@ interface ReceiptProps {
   /** The car's plate, printed large. Counter sales have none. */
   plate?: string;
   cancelled: boolean;
+  /** Taken on the customer's account: printed under the total. */
+  paidLater?: boolean;
   /** The receipt's own rows: customer, services, fees. */
   children: ReactNode;
   total: string;
@@ -35,6 +37,7 @@ export function Receipt(props: ReceiptProps) {
       {props.children}
       <div className="border-t border-black pt-1.5">
         <ReceiptRow label="المجموع" value={props.total} strong />
+        {props.paidLater && <ReceiptRow label="الدفع" value="على الحساب (آجل)" strong />}
       </div>
       {props.cancelled && <p className="text-center font-bold">إيصال ملغى</p>}
       {props.footer && <p className="mt-2 text-center">{props.footer}</p>}

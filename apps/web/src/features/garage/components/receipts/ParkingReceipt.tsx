@@ -21,6 +21,7 @@ export function ParkingReceipt({ session, shopName, footer }: ParkingReceiptProp
       atLabel="وقت الدخول"
       plate={session.plate}
       cancelled={session.status === 'cancelled'}
+      paidLater={session.paidLater}
       total={leftAt === null ? 'يُحسب عند الخروج' : formatSYP(session.fee)}
     >
       <ReceiptRow label="العميل" value={session.customerName} />

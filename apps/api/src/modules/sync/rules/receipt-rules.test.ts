@@ -1,5 +1,5 @@
 import { KEEP_SERVER_COPY } from '../sync-entry';
-import { appendOnly, receiptRules } from './receipt-rules';
+import { appendOnly, cashierCreatesOnly, receiptRules } from './receipt-rules';
 
 const cashier = { role: 'user' as const };
 const admin = { role: 'admin' as const };
@@ -38,5 +38,15 @@ describe('appendOnly', () => {
     expect(appendOnly(row('x', 1), cashier, undefined)).toBeNull();
     expect(appendOnly(row('x', 1), cashier, row('x', 1))).toBe(KEEP_SERVER_COPY);
     expect(appendOnly(row('x', 2), admin, row('x', 1))).toBe('append_only');
+  });
+});
+
+describe('cashierCreatesOnly', () => {
+  it('the cashier writes it once; only the admin changes or deletes it', () => {
+    expect(cashierCreatesOnly(row('x', 1), cashier, undefined)).toBeNull();
+    expect(cashierCreatesOnly(row('x', 1), cashier, row('x', 1))).toBe(KEEP_SERVER_COPY);
+    expect(cashierCreatesOnly(row('x', 2), cashier, row('x', 1))).toBe('locked');
+    expect(cashierCreatesOnly(row('x', 2, 2), cashier, row('x', 1))).toBe('admin_only');
+    expect(cashierCreatesOnly(row('x', 2, 2), admin, row('x', 1))).toBeNull();
   });
 });

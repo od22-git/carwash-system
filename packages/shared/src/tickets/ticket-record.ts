@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import { CAR_SIZES } from '../catalog/car-size';
-import { cancelFields, carReceiptFields, nullableTime } from '../contracts/record-fields';
+import {
+  cancelFields,
+  carReceiptFields,
+  nullableTime,
+  paidLaterField,
+} from '../contracts/record-fields';
 import { syncRecordBase } from '../contracts/sync';
 import { TICKET_STATUSES } from './ticket-status';
 
@@ -36,6 +41,7 @@ export const ticketRecordSchema = syncRecordBase.extend({
   startedAt: nullableTime(),
   notifiedAt: nullableTime(),
   deliveredAt: nullableTime(),
+  ...paidLaterField,
   ...cancelFields,
   notes: z.string().max(300).default(''),
 });

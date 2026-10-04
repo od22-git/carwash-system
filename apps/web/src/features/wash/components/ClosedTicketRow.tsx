@@ -2,6 +2,7 @@ import { formatSYP, TICKET_STATUS_LABELS, type TicketRecord } from '@carwash/sha
 import { useState } from 'react';
 import { formatTime } from '../../../shared/lib/time-format';
 import { Button, CancelReceiptForm } from '../../../shared/ui';
+import { PaidLaterTag } from '../../debts';
 import { useWash } from '../hooks/wash-context';
 import { cancelTicket } from '../lib/ticket-actions';
 import { PrintReceiptButton } from './receipt/PrintReceiptButton';
@@ -28,6 +29,7 @@ export function ClosedTicketRow({ ticket }: { ticket: TicketRecord }) {
         </td>
         <td className="px-3 py-2 tabular-nums">
           {cancelled ? TICKET_STATUS_LABELS.cancelled : formatSYP(ticket.total)}
+          <PaidLaterTag show={!cancelled && ticket.paidLater} />
         </td>
         <td className="flex flex-wrap gap-1 px-3 py-1">
           <PrintReceiptButton ticket={ticket} />

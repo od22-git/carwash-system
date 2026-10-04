@@ -15,6 +15,7 @@ export function parkingEntry(s: ParkingSessionRecord, user: SessionUser): TodayE
     at: closedAt(s),
     amount: s.fee,
     cancelled: s.status === 'cancelled',
+    paidLater: s.paidLater,
     printButton: <PrintParkingButton session={s} />,
     cancel: (reason) => cancelParking(s, reason, user),
   };

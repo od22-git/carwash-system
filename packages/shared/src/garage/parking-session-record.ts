@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { cancelFields, carReceiptFields, nullableTime } from '../contracts/record-fields';
+import {
+  cancelFields,
+  carReceiptFields,
+  nullableTime,
+  paidLaterField,
+} from '../contracts/record-fields';
 import { syncRecordBase } from '../contracts/sync';
 import { parkingPlanSchema } from './parking-plan';
 import { PARKING_STATUSES } from './parking-status';
@@ -18,6 +23,7 @@ export const parkingSessionRecordSchema = syncRecordBase.extend({
   fee: z.number().int().nonnegative().default(0),
   /** Hours charged at the hourly rate (for a fixed plan: the hours past the plan). */
   billedHours: z.number().int().nonnegative().default(0),
+  ...paidLaterField,
   ...cancelFields,
   notes: z.string().max(300).default(''),
 });

@@ -2,6 +2,7 @@ import { deliveryTotals, formatSYP, type TicketRecord } from '@carwash/shared';
 import { useState } from 'react';
 import { useAction } from '../../../../shared/lib/use-action';
 import { Button, CancelReceiptForm, Notice } from '../../../../shared/ui';
+import { PayLaterToggle } from '../../../debts';
 import { useWash } from '../../hooks/wash-context';
 import { cancelTicket, deliver, markNotified, startWashing } from '../../lib/ticket-actions';
 import { PrintReceiptButton } from '../receipt/PrintReceiptButton';
@@ -11,6 +12,7 @@ import { NotifyCustomer } from './NotifyCustomer';
 export function TicketActions({ ticket, now }: { ticket: TicketRecord; now: number }) {
   const { garage, isAdmin, user } = useWash();
   const [cancelling, setCancelling] = useState(false);
+  const [paidLater, setPaidLater] = useState(false);
   const action = useAction();
   const run = (fn: () => Promise<unknown>) => void action.run(fn);
   const toPay = deliveryTotals(ticket, now, garage).total;
@@ -26,15 +28,22 @@ export function TicketActions({ ticket, now }: { ticket: TicketRecord; now: numb
         {ticket.status === 'washing' && (
           <>
             <NotifyCustomer ticket={ticket} onNotified={() => run(() => markNotified(ticket))} />
-            <Button variant="quiet" onClick={() => run(() => deliver(ticket, garage))}>
+            <Button variant="quiet" onClick={() => run(() => deliver(ticket, garage, paidLater))}>
               الزبون استلم مباشرة
             </Button>
+            <PayLaterToggle checked={paidLater} onChange={setPaidLater} />
           </>
         )}
         {ticket.status === 'grace' && (
-          <Button disabled={action.busy} onClick={() => run(() => deliver(ticket, garage))}>
-            تسليم السيارة ({formatSYP(toPay)})
-          </Button>
+          <>
+            <Button
+              disabled={action.busy}
+              onClick={() => run(() => deliver(ticket, garage, paidLater))}
+            >
+              تسليم السيارة ({formatSYP(toPay)})
+            </Button>
+            <PayLaterToggle checked={paidLater} onChange={setPaidLater} />
+          </>
         )}
         <PrintReceiptButton ticket={ticket} />
         {isAdmin && !cancelling && (

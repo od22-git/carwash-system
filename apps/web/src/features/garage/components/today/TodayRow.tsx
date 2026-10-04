@@ -2,6 +2,7 @@ import { formatSYP } from '@carwash/shared';
 import { useState, type ReactNode } from 'react';
 import { formatTime } from '../../../../shared/lib/time-format';
 import { Button, CancelReceiptForm } from '../../../../shared/ui';
+import { PaidLaterTag } from '../../../debts';
 import { useGarage } from '../../hooks/garage-context';
 
 /** One of today's garage or package receipts, in the shape the table shows. */
@@ -15,6 +16,8 @@ export interface TodayEntry {
   at: number;
   amount: number;
   cancelled: boolean;
+  /** Taken on the customer's account (آجل). */
+  paidLater?: boolean;
   printButton: ReactNode;
   cancel: (reason: string) => Promise<unknown>;
 }
@@ -37,6 +40,7 @@ export function TodayRow({ entry }: { entry: TodayEntry }) {
         <td className="px-3 py-2 tabular-nums">{formatTime(entry.at)}</td>
         <td className="px-3 py-2 tabular-nums">
           {entry.cancelled ? 'ملغى' : formatSYP(entry.amount)}
+          <PaidLaterTag show={!entry.cancelled && entry.paidLater === true} />
         </td>
         <td className="flex flex-wrap gap-1 px-3 py-1">
           {entry.printButton}

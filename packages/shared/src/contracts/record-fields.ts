@@ -20,3 +20,8 @@ export const cancelFields = {
   cancelledAt: nullableTime(),
   cancelReason: z.string().max(200).default(''),
 };
+
+/** Paid later: the amount is added to the customer's debt instead of taken now (آجل). */
+export const paidLaterField = {
+  paidLater: z.boolean().default(false),
+};

@@ -1,6 +1,7 @@
 import { formatSyrianPhone, type CustomerRecord, type VehicleRecord } from '@carwash/shared';
 import { useState } from 'react';
 import { Button } from '../../../shared/ui';
+import { DebtPanel } from '../../debts';
 import { CustomerForm } from './CustomerForm';
 import { CustomerVehicles } from './CustomerVehicles';
 
@@ -57,6 +58,7 @@ export function CustomerDetails({
         allVehicles={allVehicles}
         customerName={customerName}
       />
+      <DebtPanel key={customer.id} customer={customer} />
     </article>
   );
 }

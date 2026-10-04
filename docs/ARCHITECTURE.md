@@ -36,12 +36,14 @@ src/
   garage/        garage-settings, pickup-fee, parking-fee, covered-fee, plans and sessions
   subscriptions/ packages, subscriptions sold per car, free-wash use
   tickets/       ticket-status (allowed status changes), ticket-totals
-  workers/       pay-type, worker-pay
+  workers/       pay-type, worker-pay (what each worker earned), payments (advances, wages)
   stock/         product, movement and sale records; ledger (levels, average cost), counts
                  (evening waste), period summaries, sale lines (piece / carton prices)
+  finance/       expenses, monthly budgets, revenue by source, spending by budget line
+  debts/         payments on account; receipts taken on credit (paidLater) and balances
   customers/     syrian-phone, arabic-name, duplicates, plate
   whatsapp/      template, link
-  audit/         audit events (cancellations)
+  audit/         audit events (cancellations, deletions)
   users/         role
 ```
 
@@ -95,7 +97,9 @@ src/
 
 A feature may import from `shared/`, `core/` and `@carwash/shared`, and from another
 feature only through that feature's `index.ts`. Feature imports go one way:
-`settings, customers, catalog, workers` ← `garage` ← `wash`, and `stock` ← `sales`.
+`settings, customers, catalog, workers` ← `garage` ← `wash`, `stock` ← `sales`, and
+`debts` ← `customers, wash, garage, finance` (they show the pay-later switch, the tag and the
+customer's account).
 
 Reused building blocks:
 
@@ -107,6 +111,9 @@ Reused building blocks:
 - `shared/lib`: `UserError` (a message shown to the user as it is), `date-input` (day and month
   pickers, `dayRange` / `monthRange` for reports), `parseWholeNumber`.
 - `stock`: `StockContext` shared by the stock and waste screens; `useLowStockCount` for the menu.
+- `shared/ui`: `PeriodPicker` (day / week from Saturday / month), `PeriodSection`, `Stats`.
+- `debts`: `PayLaterToggle` next to a deliver button, `PaidLaterTag` next to an amount,
+  `DebtPanel` (the customer's account) and `DebtorsTable` (who owes, on the finance page).
 - `core/db`: `nextReceiptNo()` — one receipt series per laptop for wash, garage and packages.
 - `core/audit`: `logAudit()` for sensitive actions.
 
@@ -125,7 +132,8 @@ settings) use last-write-wins on `updatedAt`.
 2. `apps/api/src/modules/<feature>/`: `<feature>.schema.ts` (table with `syncColumns()`),
    `<feature>.sync.ts` (a `SyncEntry`: who may push / pull, optional `project` to hide fields
    per role, optional `authorize` — use `receiptRules([...locked statuses])` for anything with a
-   printed receipt, `appendOnly` for logs), and `providers: [registerSyncTables(entry)]` in the
+   printed receipt, `appendOnly` for logs, `cashierCreatesOnly` when the cashier records and only
+   the admin corrects), and `providers: [registerSyncTables(entry)]` in the
    module. Export the table from
    `database/schema.ts`, then `pnpm --filter @carwash/api db:generate --name <change>`.
 3. `apps/web/src/core/db/`: a new `version()` block in `local-db.ts`, one line in

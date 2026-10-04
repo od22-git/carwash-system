@@ -25,6 +25,12 @@ describe('garage sessions', () => {
     expect(await releaseCar(session, S)).toMatchObject({ status: 'left', fee: 20_000 });
   });
 
+  it('a car can leave on the customer account', async () => {
+    const session = await park();
+    at('12:00');
+    expect(await releaseCar(session, S, true)).toMatchObject({ fee: 20_000, paidLater: true });
+  });
+
   it('a day plan keeps its price even if the admin edits the plan later', async () => {
     const day = { name: 'يوم', hours: '24', price: '150,000', active: true };
     const plan = await savePlan(day, []);

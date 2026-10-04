@@ -30,6 +30,7 @@ export const parkingSessions = pgTable(
     leftAt: epochMs('left_at'),
     fee: integer('fee').notNull().default(0),
     billedHours: integer('billed_hours').notNull().default(0),
+    paidLater: boolean('paid_later').notNull().default(false),
     cancelledAt: epochMs('cancelled_at'),
     cancelReason: text('cancel_reason').notNull().default(''),
     notes: text('notes').notNull().default(''),
